@@ -1,9 +1,38 @@
+# Sumário
+**[SNDE](#snde)**
+**[Usando a lib](#usando-a-lib)**
+**[O que é](#o-que-é)**
+**[01 - Janela](#01-janela)**
+* *[Criar janela](#criar-janela)*
+
+**[02 - Imagem](#02-imagem)**
+* *[Carregando imagens](#carregando-imagens)*
+
+**[03 - Desenhando imagens](#03-desenhando-imagens)**
+* *[draw_image](#draw_image)*
+* *[update_screen](#update_screen)*
+
+**[04 - Cenário](#04-cenário)**
+* *[Criando mapa](#criando-mapa)*
+* *[Mapa montado](#mapa-montado)*
+* *[Carregar mapa](#carregar-mapa)*
+* *[Desenhar mapa](#desenhar-mapa)*
+* *[Colisão](#colisão)*
+* *[Camera](#camera)*
+
+**[05 - Eventos](#05-eventos)**
+* *[Adicionando eventos](#adicionando-eventos)*
+* *[Teclado](#teclado)*
+* *[Janela](#janela)*
+* *[Outros Eventos](#outros-eventos)*
+
+#
 
 # SNDE
 ***Sem Necessiade De Existir.***
 
 **Objetivo:**
-Apenas criar codigo descartável. E usar um pouco da ***linguagem C*** / ***Markdown***.
+Apenas criar código descartável. E usar um pouco da ***linguagem C*** / ***Markdown***.
 
 ## O que é?
 A biblioteca contém funções que abstrai funcionalidades da biblioteca ***Allegro*** facilitando o uso na criação de protótipos de jogos 2D.
@@ -28,6 +57,8 @@ ou
 [Lista com refências dos tipos de dados]("#").
 
 ## Usando a lib
+
+
 **Dependências**
 * Allegro 5 :  [Instalação]("https://liballeg.org/download.html").
 
