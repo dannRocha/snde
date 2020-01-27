@@ -118,7 +118,8 @@ Para carregar uma imagem para o seu projeto, crie uma variavel do tipo ***```Ima
 
 ***Assinatura:***
 ```cpp
-Image* load_image(const char* source);
+Image load_image(const String src);
+
 ```
 
 ***Exemplo 2.0***:
