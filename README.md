@@ -81,6 +81,9 @@ bool init_all_lib(void);
 
 ***Exemplo 0.0***:
 ```cpp
+#include "lib/snde.h"
+
+
 int main(int argc, char** argv){
     
     if(!init_all_lib())
@@ -115,6 +118,9 @@ Window create_window(int width, int height, const String title);
 ```
 ***Exemplo 1.0***:
 ```cpp
+#include "lib/snde.h"
+
+
 int main(int argc, char** argv){
     
     if(!init_all_lib())
@@ -170,6 +176,9 @@ Image load_image(const String src);
 
 
 ```cpp
+#include "lib/snde.h"
+
+
 int main(int argc, char** argv){
 
     Image hero_b = load_image("src/imagens_b/hero.bmp");
@@ -212,7 +221,9 @@ void update_screen(double frameperseconds);
 ***Exemplo 3.0***:
 
 ```cpp
+#include "lib/snde.h"
 #include <stdbool.h>
+
 
 int main(int argc, char** argv){
 
@@ -369,6 +380,8 @@ void free_map(Map map);
 ```
 ***Exemplo 4.2***:
 ```cpp
+#include "lib/snde.h"
+
 
 int main(int argc, char** argv){
 
@@ -398,6 +411,8 @@ void draw_map(Map map, double scale);
 ```
 ***Exemplo 4.3***:
 ```cpp
+#include "lib/snde.h"
+
 
 int main(int argc, char** argv){
 
@@ -452,6 +467,8 @@ Existe dois tipos de dados para iniciar o trabalho de eventos no seu software, *
 ### Adicionando eventos
 ***Exemplo 5.0***:
 ```cpp
+#include "lib/snde.h"
+
 
 int main(int argc, char** argv){
 
