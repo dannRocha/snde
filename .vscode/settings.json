@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "allegro_image.h": "c",
+        "allegro.h": "c",
+        "stdio.h": "c",
+        "allegro_video.h": "c",
+        "allegro_primitives.h": "c",
+        "map.h": "c",
+        "game.h": "c",
+        "stdlib.h": "c",
+        "mold.h": "c",
+        "tools.h": "c",
+        "snde.h": "c"
+    }
+}
