@@ -61,7 +61,7 @@ ou
 
 
 **Dependências**
-* Allegro 5 :  <a href="https://liballeg.org/download.html" target="__blank"> Instalação</a>
+* Allegro 5 :  <a href="https://liballeg.org/download.html" target="_blank"> Instalação</a>
 
 
 **Importar**
