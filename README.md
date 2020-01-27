@@ -27,6 +27,11 @@
 * *[Janela](#janela)*
 * *[Outros Eventos](#outros-eventos)*
 
+**[06 - Personagem](#06-personagem)**
+* *[Criar personagem](#criar-personagem)*
+* *[Animação](#animação)*
+* *[Movimentação](#movimentação)*
+
 #
 
 # SNDE
@@ -499,4 +504,31 @@ int main(int argc, char** argv){
 ### Janela
     documentation in progress
 ### Outros Eventos
+    documentation in progress
+
+
+## 06 - Personagem
+
+Na biblioteca há um estrutura com dados para criação de um personagem 2D, ***```Actor```*** , que é constituida apartir de outras estruturas: ***```Coord```*** , ***```Dimension```*** , ***```Attributes```*** , ***```Sprites```*** .
+[link de referência dos tipos dados.](#) 
+
+***Assinatura:***
+```cpp
+typedef struct  Character{
+    
+    Coord coord;
+    Dimension size;
+    Attributes attr;
+    Sprites img;
+
+} Actor;
+```
+
+    documentation in progress
+
+### Criar personagem
+    documentation in progress
+### Animação
+    documentation in progress
+### Movimentação
     documentation in progress
