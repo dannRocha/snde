@@ -61,7 +61,8 @@ ou
 
 
 **Dependências**
-* Allegro 5 :  [Instalação]("https://liballeg.org/download.html").
+* Allegro 5 :  <a href="https://liballeg.org/download.html" target="__blank"> Instalação</a>
+
 
 **Importar**
 ```cpp
