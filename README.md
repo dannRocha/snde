@@ -186,6 +186,9 @@ Image load_image(const String src);
 
 int main(int argc, char** argv){
 
+    if(!init_all_lib())
+        return -1;
+
     Image hero_b = load_image("src/imagens_b/hero.bmp");
     Image hero_p = load_image("src/imagens_p/hero.png");
     
@@ -390,6 +393,9 @@ void free_map(Map map);
 
 int main(int argc, char** argv){
 
+    if(!init_all_lib())
+        return -1;
+
     Map scenarios = load_map("src/map/scenario_00.map");
     
     /*
@@ -421,6 +427,8 @@ void draw_map(Map map, double scale);
 
 int main(int argc, char** argv){
 
+    if(!init_all_lib())
+        return -1;
 
     Window screen = create_window(640, 480, "Desenhar mapa");
     Map scenario = load_map("src/map/scenario_00.map");
@@ -477,6 +485,8 @@ Existe dois tipos de dados para iniciar o trabalho de eventos no seu software, *
 
 int main(int argc, char** argv){
 
+    if(!init_all_lib())
+        return -1;
 
     Window screen = create_window(640, 480, "Adicionando Eventos");
     Events event_queue = add_event_listener(screen);
