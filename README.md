@@ -156,7 +156,7 @@ int main(int argc, char** argv){
 ## 02 - Imagem
 ### Carregando imagens
 
-Para carregar uma imagem para o seu projeto, crie uma variavel do tipo ***```Image```*** , que recebe a função ***```load_image```*** passando como parâmetro ***```const char* source```*** com o caminho da imagem apartir da raiz do projeto e com a extensão da imagem. 
+Para carregar uma imagem para o seu projeto, crie uma variavel do tipo ***```Image```*** , que recebe a função ***```load_image```*** passando como parâmetro ***```const char* source```*** com o caminho da imagem a partir da raiz do projeto e com a extensão da imagem. 
 
 **OBS**: Apenas os formatos de imagens são permitidos ***```.bmp```*** ou ***```.png```*** .
 
@@ -367,7 +367,7 @@ QUANTIDADE_DE_TILES: 3
 01- src/bmp/map/wall.bmp
 02- src/bmp/map/water.bmp
    |
-   |--> Caminho apartir da raiz do projeto
+   |--> Caminho a partir da raiz do projeto
 ```
 
 ### Mapa montado
@@ -519,7 +519,7 @@ int main(int argc, char** argv){
 
 ## 06 - Personagem
 
-Na biblioteca há um estrutura com dados para criação de um personagem 2D, ***```Actor```*** , que é constituida apartir de outras estruturas: ***```Coord```*** , ***```Dimension```*** , ***```Attributes```*** , ***```Sprites```*** .
+Na biblioteca há um estrutura com dados para criação de um personagem 2D, ***```Actor```*** , que é constituida a partir de outras estruturas: ***```Coord```*** , ***```Dimension```*** , ***```Attributes```*** , ***```Sprites```*** .
 [link de referência dos tipos dados.](#) 
 
 ***Assinatura:***
