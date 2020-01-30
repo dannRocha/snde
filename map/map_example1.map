@@ -1,7 +1,7 @@
 12 19 3
-src/bmp/map/ground_12.bmp
-src/bmp/map/wall_11.bmp
-src/bmp/map/water_00.bmp
+src/bmp/map/ground.bmp
+src/bmp/map/wall.bmp
+src/bmp/map/water.bmp
 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 01
 01 01 01 01 01 00 00 01 00 00 01 01 01 01 00 00 00 00 01

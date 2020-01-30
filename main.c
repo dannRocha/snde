@@ -10,11 +10,8 @@ int main(int argc, char** argv)
         return -1;
 
     Window screen   = create_window(840, 480, "LIBRARY");
-    Image  hero     = load_image("src/bmp/actor_01.bmp");
     Events events   = add_event_listener(screen);
-    Map scenarios[2];
-        scenarios[0] = load_map("map/map_example0.map");
-        scenarios[1] = load_map("map/map_example1.map");
+    Map scenarios   = load_map("map/map_example1.map");
 
 
     int x = 0;
@@ -35,7 +32,7 @@ int main(int argc, char** argv)
             break;
         
         draw_color_background(255, 255, 255);
-        draw_map(scenarios[1], 1);
+        draw_map(scenarios, 1);
         //draw_image(hero, x, y, 1, 0);
         update_screen(60.0);
 
@@ -53,9 +50,7 @@ int main(int argc, char** argv)
     
     destroy(screen, "Window");
     destroy(events, "Events");
-    destroy(hero, "Image");
-    for(int i = 0; i < 2; i++)
-        free_map(scenarios[i]);
+    free_map(scenarios);
     
   return 0;
 
