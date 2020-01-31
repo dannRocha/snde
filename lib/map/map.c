@@ -114,7 +114,7 @@ Map load_map(String filename){
     FILE *file = fopen(filename, "r");
 
     fscanf(file, "%d %d %d", &AUTO_DETECT_ROW, &AUTO_DETECT_COL, &tiles.quantity);
-    Map map;
+
 
 
     if(file == NULL){
@@ -125,8 +125,11 @@ Map load_map(String filename){
         exit(-1);
     }
 
+
+    Map map;
     map = (Map ) malloc ((AUTO_DETECT_ROW) * sizeof(int *));
-    
+
+
     if(map == NULL)
         message_error("Error ao alocar memoria para MAP");
 
@@ -189,16 +192,30 @@ void draw_map(Map map, double scale){
    
 
     for(int i = 0; i < AUTO_DETECT_ROW; i++){
-        for(int j = 0; j < AUTO_DETECT_COL; j++){
-            
-            tiles.coord[i][j].x = j * tiles.dimen[i][j].w * scale;
-            tiles.coord[i][j].y = i * tiles.dimen[i][j].h * scale;
-
+        for(int j = 0; j < AUTO_DETECT_COL; j++){        
             for(int k = 0; k < tiles.quantity; k++){
-                if(map[i][j] == k)
+                if(map[i][j] == k){
+
+                    // MODIFICAR PROPRIEDADES COM BASE NA ESCALA DO DESENHO
+    
+                    tiles.dimen[i][j].w = al_get_bitmap_width(tiles.src[k])  * scale;
+                    tiles.dimen[i][j].h = al_get_bitmap_height(tiles.src[k]) * scale;
+            
+                    tiles.coord[i][j].x = j * tiles.dimen[i][j].w;
+                    tiles.coord[i][j].y = i * tiles.dimen[i][j].h;
+
                     draw_image(tiles.src[k], tiles.coord[i][j].x, tiles.coord[i][j].y, scale, 0);
+                }
             }
         }
     }
 }
+
+
+
+bool collision_map(){
+    
+    return false;
+}
+
 
