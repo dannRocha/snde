@@ -48,6 +48,7 @@ typedef struct  Character{
     Dimension size;
     Attributes attr;
     Sprites img;
+    Image test;
 
 } Actor;
 

@@ -210,11 +210,31 @@ void draw_map(Map map, double scale){
         }
     }
 }
+// collision(item1, item2){
+//     return ( 
+//         item1.x + item1.w >= item2.x && item1.x <= item2.x + item2.w &&
+//         item1.y <= item2.y + item2.h && item1.y + item1.h >= item2.y
+//     );
+// }
 
 
+bool collision_map(Map *map, Actor *character,int start_tile, int end_tile){
+    for(int i = 0; i < AUTO_DETECT_ROW; i++){
+        for(int j = 0; j < AUTO_DETECT_COL; j++){
+            for(int tile = start_tile; tile < end_tile; tile++){
+                if((*map)[i][j] == tile){
+                    if( character->coord.x + character->size.w >= tiles.coord[i][j].x &&
+                        character->coord.x <= tiles.coord[i][j].x + tiles.dimen[i][j].w &&
+                        character->coord.y <= tiles.coord[i][j].y + tiles.dimen[i][j].h &&
+                        character->coord.y + character->size.h >= tiles.coord[i][j].y
+                    ){
+                        return true;
+                    }
+                }
+            }
+        }
+    }
 
-bool collision_map(){
-    
     return false;
 }
 
