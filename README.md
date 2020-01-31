@@ -473,6 +473,7 @@ bool collision_map(Map *map, Actor *character,int start_tile, int end_tile);
     O exemplo acima mostra o sistema de colisão do mapa sendo utilizado. No gif quando o quadrado azul colide com as paredes ele volta pra posição inicial. <strong>OBS: Mapa desenhado em escala 1.5</strong>;
     </figcaption>
 </figure>
+
 ### Camera
     No implementation
 
