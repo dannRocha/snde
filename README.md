@@ -171,7 +171,7 @@ Image load_image(const String src);
 Árvore de diretórios.
 
 /src|
-|   |--imagens_b/
+|   |--imagens_b|
 |   |--|---hero.bmp
 |   |
 |   |--imagens_p|
@@ -453,7 +453,26 @@ int main(int argc, char** argv){
 ```
 
 ### Colisão
-    No implementation
+Para adicionar colisão com o mapa, a biblioteca dispoe da função ***```collision_map```*** que retorna ***```false```*** se não houve colisão e ***```true```*** se houve colisão com os objetos que possuem colisão no cenário.
+
+A função ***```collision_map```*** recebe como parâmetros:
+* ```Map *map``` : Um ponteiro ou a referência para o mapa que deseja verificar a colisão.
+* ```Actor *character``` : Um ponteiro ou a referência para o um objeto jogavel ou não. Ex: Nave, Inimigo, Heroi etc.
+* ```int start_tile``` e ```int end_tile``` são respectivamente o intervalo de itens do mapa que vão possuir colisão.
+
+***Assinatura:***
+```cpp
+bool collision_map(Map *map, Actor *character,int start_tile, int end_tile);
+
+```
+
+***Exemplo 4.4***:
+<figure>
+    <img src="docs/img/collision.gif" style="display: block; margin: 0 auto;">
+    <figcaption>
+    O exemplo acima mostra o sistema de colisão do mapa sendo utilizado. No gif quando o quadrado azul colide com as paredes ele volta pra posição inicial. <strong>OBS: Mapa desenhado em escala 1.5</strong>;
+    </figcaption>
+</figure>
 ### Camera
     No implementation
 
@@ -541,4 +560,12 @@ typedef struct  Character{
 ### Animação
     documentation in progress
 ### Movimentação
+    documentation in progress
+
+## 7 - Física
+### Entre dois *```Actor```*
+    documentation in progress
+### Circulos
+    documentation in progress
+### Quadrados
     documentation in progress
