@@ -40,6 +40,8 @@ typedef struct{
 
 } Attributes;
 
+
+
 typedef struct  Character{
     
     Coord coord;
@@ -52,8 +54,8 @@ typedef struct  Character{
 
 
 typedef struct {
-    Coord *coord;
-    Dimension *dimen;
+    Coord **coord;
+    Dimension **dimen;
     Image* src;
     int quantity;
 

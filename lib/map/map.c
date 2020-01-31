@@ -57,12 +57,14 @@ String* path_bitmap(String filename){
 
 
 
-void configure_tiles(Tiles* tile, String filename){
+void configure_tiles(Tiles* tile, Map *map, String filename){
+
 
 
     tile->src = malloc((tiles.quantity) * sizeof(Image ));
-    tile->coord = malloc((tiles.quantity) * sizeof(Coord ));
-    tile->dimen = malloc((tiles.quantity) * sizeof(Dimension ));
+    tile->coord = (Coord** ) malloc((AUTO_DETECT_ROW) * sizeof(Coord *));
+    tile->dimen = (Dimension** ) malloc((AUTO_DETECT_ROW) * sizeof(Dimension* ));
+    
 
 
     if(tile->src == NULL)
@@ -79,11 +81,30 @@ void configure_tiles(Tiles* tile, String filename){
     for(int i = 0; i < tile->quantity; i++)
         tile->src[i] = load_image(paths[i]);
 
+    // ALOCAR MEMORIA PARA A MATRIZ DE COORDENAS E DIMENSÕES DOS TILES
+    for(int i = 0; i < AUTO_DETECT_ROW; i++){
+        tile->coord[i] = (Coord *) malloc ((AUTO_DETECT_COL) * sizeof(Coord));
+        tile->dimen[i] = (Dimension *) malloc ((AUTO_DETECT_COL) * sizeof(Dimension));
+    }
+
+    // CONFIGURAR COORDENADAS
+    for(int i = 0; i < AUTO_DETECT_ROW; i++)
+        for(int j = 0; j < AUTO_DETECT_COL; j++){
+            for(int k = 0; k < tile->quantity; k++){
+                if((*map)[i][j] == k){
+                    tile->dimen[i][j].w = al_get_bitmap_width(tile->src[k]);
+                    tile->dimen[i][j].h = al_get_bitmap_height(tile->src[k]);
+                    tile->coord[i][j].x = j * tile->dimen[i][j].w;
+                    tile->coord[i][j].y = i * tile->dimen[i][j].h;
+                }
+
+            }    
+        }
+    
 
     if(!paths)
         free(paths);
 }
-
 
 
 
@@ -103,17 +124,16 @@ Map load_map(String filename){
         free(file);
         exit(-1);
     }
-    
 
     map = (Map ) malloc ((AUTO_DETECT_ROW) * sizeof(int *));
     
     if(map == NULL)
-        message_error("Error ao alocar memoria");
+        message_error("Error ao alocar memoria para MAP");
+
 
     
     for(int i = 0; i < AUTO_DETECT_ROW; i++)
         map[i] = (int *) malloc ((AUTO_DETECT_COL) * sizeof(int));
-    
 
 
     // INICIALIZAR MATRIZ COM VALOR
@@ -121,8 +141,6 @@ Map load_map(String filename){
         for(int j = 0; j < AUTO_DETECT_COL; j++)
             map[i][j] = 0;
 
-
-    configure_tiles(&tiles, filename);
 
 
     // PULA O FLUXO DE LEITURA ATÈ A MATRIZ;
@@ -141,6 +159,9 @@ Map load_map(String filename){
 
    
     fclose(file);
+
+
+    configure_tiles(&tiles, &map, filename);
 
     return map;
 
@@ -165,24 +186,19 @@ void free_image_src(String* path, int row){
 
 
 void draw_map(Map map, double scale){
-    
-    int x = 0, y = 0;
-    int w = 32, h = 32;
    
 
     for(int i = 0; i < AUTO_DETECT_ROW; i++){
         for(int j = 0; j < AUTO_DETECT_COL; j++){
-            for(int k = 0; k < tiles.quantity; k++){
-                if(map[i][j] == k){
-                    draw_image(tiles.src[k], x,y, scale,0);
-                }
-            }
-            x += w * scale;
-        }
+            
+            tiles.coord[i][j].x = j * tiles.dimen[i][j].w * scale;
+            tiles.coord[i][j].y = i * tiles.dimen[i][j].h * scale;
 
-        x = 0;
-        y += h * scale;
+            for(int k = 0; k < tiles.quantity; k++){
+                if(map[i][j] == k)
+                    draw_image(tiles.src[k], tiles.coord[i][j].x, tiles.coord[i][j].y, scale, 0);
+            }
+        }
     }
 }
-
 

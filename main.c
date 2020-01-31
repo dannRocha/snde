@@ -32,8 +32,7 @@ int main(int argc, char** argv)
             break;
         
         draw_color_background(255, 255, 255);
-        draw_map(scenarios, 1);
-        //draw_image(hero, x, y, 1, 0);
+        draw_map(scenarios, 1.5);
         update_screen(60.0);
 
         x += speed * sense_x;
