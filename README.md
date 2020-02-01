@@ -44,22 +44,7 @@ Apenas criar código descartável. E usar um pouco da ***linguagem C*** / ***Mar
 A biblioteca contém funções que abstrai funcionalidades da biblioteca ***Allegro*** facilitando o uso na criação de protótipos de jogos 2D.
 
 ***Observação***
-Os tipos de dados ***```Window```*** , ***```Image```*** , ***```Events```*** e outros presentes nesse documento, são apenas ***alias*** para a biblioteca ***Allegro***. Outros como ***```Map```*** , ***```String```*** e outros foram criados para deixar a leitura do código mais simples.
-
-***Exemplo***:
-```cpp
-    //Códigos equivalentes
-
-    char* texto = "Lorem Ipsum is simply dummy...";
-    String texto = "Lorem Ipsum is simply dummy...";
-```
-ou 
-```cpp
-    //Códigos equivalentes
-    
-    int** mapa = load_mapa("mundo_01.map");
-    Map mapa = load_mapa("mundo_01.map");
-```
+Os tipos de dados ***```Window```*** , ***```Image```*** , ***```Events```*** e outros presentes nesse documento, são apenas ***alias*** para a biblioteca ***Allegro*** ou são ***alias*** de componentes da propria biblioteca **snde**.
 [Lista com refências dos tipos de dados]("#").
 
 ## Usando a lib
@@ -106,7 +91,7 @@ int main(int argc, char** argv){
 Outra função importante é a de limpeza da memória após finalizar o programa,```destroy```, que recebe como parâmetro do elemento a ser limpo e o tipo de dado em **string**.
 ***Assinatura:***
 ```cpp
-void destroy(void* element, const String type);
+void destroy(void* element, const char* type);
 ```
 ***Comando Compilação***
 ```
@@ -119,7 +104,7 @@ Para criar uma janela basta declarar um varialvel do tipo ***```Window```*** , q
 
 ***Assinatura:***
 ```c
-Window create_window(int width, int height, const String title);
+Window create_window(int width, int height, const char* title);
 ```
 ***Exemplo 1.0***:
 ```cpp
@@ -131,7 +116,7 @@ int main(int argc, char** argv){
     if(!init_all_lib())
         return -1;
 
-    const String TITLE = "Titulo da janela";
+    const char* TITLE = "Titulo da janela";
     const int WIDTH  = 640;
     const int HEIGHT = 480;
 
@@ -162,7 +147,7 @@ Para carregar uma imagem para o seu projeto, crie uma variavel do tipo ***```Ima
 
 ***Assinatura:***
 ```cpp
-Image load_image(const String src);
+Image load_image(const char* src);
 
 ```
 
@@ -214,7 +199,7 @@ Para desenhar uma imagem da tela o janela deve está instanciada e a imagem a se
 
 ***Assinatura:***
 ```cpp
-void draw_image(Image* img, float x,float y, double scale, int flags );
+void draw_image(Image img, float x,float y, double scale, int flags );
 ```
 ##
 ### update_screen
@@ -380,7 +365,7 @@ Para carregar o mapa é necessário chamar a função ***```load_map```*** que r
 
 ***Assinatura:***
 ```cpp
-Map load_map(const String filename);
+Map load_map(const char* filename);
 ```
 ```cpp
 void free_map(Map map);
