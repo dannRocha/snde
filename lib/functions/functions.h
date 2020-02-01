@@ -16,7 +16,7 @@ bool init_all_lib(void);
 #ifndef __WINDOW_SNDE_H__
 #define __WINDOW_SNDE_H__
 
-Window create_window(int width, int height, const String title);
+Window create_window(int width, int height, const char* title);
 
 #endif //__WINDOW_SNDE_H__
 
@@ -24,7 +24,7 @@ Window create_window(int width, int height, const String title);
 #ifndef __IMAGE_SNDE_H__
 #define __IMAGE_SNDE_H__
 
-Image load_image(const String src);
+Image load_image(const char* src);
 void draw_image(Image img, float x,float y, double scale, int flags );
 
 #endif //__IMAGE_SNDE_H__
@@ -52,7 +52,7 @@ void update_screen(double frameperseconds);
 #ifndef __UTILS_SNDE_H__
 #define __UTILS_SNDE_H__
 
-void destroy(void* element, const String type);
+void destroy(void* element, const char* type);
 void keyboard(Event* event, int* sense_x, int* sense_y);
 
 #endif //__UTILS_SNDE_H__

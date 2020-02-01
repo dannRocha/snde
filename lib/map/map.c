@@ -4,13 +4,7 @@
 
 
 
-int AUTO_DETECT_ROW = 0;
-int AUTO_DETECT_COL = 0;
-Tiles tiles;
-
-
-
-String* path_bitmap(String filename){
+char** path_bitmap(char* filename){
     
     FILE* file = fopen(filename, "r");
     
@@ -26,12 +20,12 @@ String* path_bitmap(String filename){
     fscanf(file, "%d %d %d", &row, &col, &sprites);
     
     
-    String* path;
+    char** path;
 
-    path =  malloc((sprites) * sizeof(String));
+    path =  malloc((sprites) * sizeof(char*));
 
     if(!path)
-        message_error("Error ao alocar memoria");
+        message_error("Error ao alocar memoria para PATH ");
 
     for(int i = 0; i < sprites; i++)
         path[i] = malloc((255) * sizeof(char));
@@ -57,45 +51,44 @@ String* path_bitmap(String filename){
 
 
 
-void configure_tiles(Tiles* tile, Map *map, String filename){
+void configure_tiles(Map *map, char* filename){
 
 
-
-    tile->src = malloc((tiles.quantity) * sizeof(Image ));
-    tile->coord = (Coord** ) malloc((AUTO_DETECT_ROW) * sizeof(Coord *));
-    tile->dimen = (Dimension** ) malloc((AUTO_DETECT_ROW) * sizeof(Dimension* ));
+    map->tile.src = malloc((map->tile.quantity) * sizeof(Image ));
+    map->tile.coord = (Coord** ) malloc((map->rows) * sizeof(Coord *));
+    map->tile.dimen = (Dimension** ) malloc((map->rows) * sizeof(Dimension* ));
     
 
 
-    if(tile->src == NULL)
+    if(map->tile.src == NULL)
         message_error("Error ao alocar memoria");
 
-    String* paths = path_bitmap(filename);
+    char** paths = path_bitmap(filename);
 
 
-    for(int i = 0; i < tile->quantity; i++)
-        tile->src[i] = (Image) malloc((tile->quantity) * sizeof(Image));
+    for(int i = 0; i < map->tile.quantity; i++)
+        map->tile.src[i] = (Image) malloc((map->tile.quantity) * sizeof(Image));
 
 
     // CARREGA TODOS OS TILES DO MAPA;
-    for(int i = 0; i < tile->quantity; i++)
-        tile->src[i] = load_image(paths[i]);
+    for(int i = 0; i < map->tile.quantity; i++)
+        map->tile.src[i] = load_image(paths[i]);
 
     // ALOCAR MEMORIA PARA A MATRIZ DE COORDENAS E DIMENSÕES DOS TILES
-    for(int i = 0; i < AUTO_DETECT_ROW; i++){
-        tile->coord[i] = (Coord *) malloc ((AUTO_DETECT_COL) * sizeof(Coord));
-        tile->dimen[i] = (Dimension *) malloc ((AUTO_DETECT_COL) * sizeof(Dimension));
+    for(int i = 0; i < map->rows; i++){
+        map->tile.coord[i] = (Coord *) malloc ((map->cols) * sizeof(Coord));
+        map->tile.dimen[i] = (Dimension *) malloc ((map->cols) * sizeof(Dimension));
     }
 
-    // CONFIGURAR COORDENADAS
-    for(int i = 0; i < AUTO_DETECT_ROW; i++)
-        for(int j = 0; j < AUTO_DETECT_COL; j++){
-            for(int k = 0; k < tile->quantity; k++){
-                if((*map)[i][j] == k){
-                    tile->dimen[i][j].w = al_get_bitmap_width(tile->src[k]);
-                    tile->dimen[i][j].h = al_get_bitmap_height(tile->src[k]);
-                    tile->coord[i][j].x = j * tile->dimen[i][j].w;
-                    tile->coord[i][j].y = i * tile->dimen[i][j].h;
+    // CONFIGURAR COORDENADAS DOS TILES
+    for(int i = 0; i < map->rows; i++)
+        for(int j = 0; j < map->cols; j++){
+            for(int k = 0; k < map->tile.quantity; k++){
+                if(map->source[i][j] == k){
+                    map->tile.dimen[i][j].w = al_get_bitmap_width(map->tile.src[k]);
+                    map->tile.dimen[i][j].h = al_get_bitmap_height(map->tile.src[k]);
+                    map->tile.coord[i][j].x = j * map->tile.dimen[i][j].w;
+                    map->tile.coord[i][j].y = i * map->tile.dimen[i][j].h;
                 }
 
             }    
@@ -108,125 +101,113 @@ void configure_tiles(Tiles* tile, Map *map, String filename){
 
 
 
-Map load_map(String filename){
+Map load_map(char* filename){
 
+    Map maps;
 
     FILE *file = fopen(filename, "r");
 
-    fscanf(file, "%d %d %d", &AUTO_DETECT_ROW, &AUTO_DETECT_COL, &tiles.quantity);
-
+    fscanf(file, "%d %d %d", &maps.rows, &maps.cols, &maps.tile.quantity);
 
 
     if(file == NULL){
         message_error("Error ao tentar lê o arquivo");
-    
-
         free(file);
         exit(-1);
     }
 
 
-    Map map;
-    map = (Map ) malloc ((AUTO_DETECT_ROW) * sizeof(int *));
+    
+    maps.source = (int** ) malloc((maps.rows) * sizeof(int* ));
 
 
-    if(map == NULL)
+
+    if(maps.source == NULL)
         message_error("Error ao alocar memoria para MAP");
 
 
-    
-    for(int i = 0; i < AUTO_DETECT_ROW; i++)
-        map[i] = (int *) malloc ((AUTO_DETECT_COL) * sizeof(int));
+    for(int i = 0; i < maps.rows; i++)
+        maps.source[i] = (int* ) malloc ((maps.cols) * sizeof(int));
 
 
-    // INICIALIZAR MATRIZ COM VALOR
-    for(int i = 0; i < AUTO_DETECT_ROW; i++)
-        for(int j = 0; j < AUTO_DETECT_COL; j++)
-            map[i][j] = 0;
-
+    for(int i = 0; i < maps.rows; i++)
+        for(int j = 0; j < maps.cols; j++)
+            maps.source[i][j] = 0;
 
 
     // PULA O FLUXO DE LEITURA ATÈ A MATRIZ;
-    for(int i = 0; i <= tiles.quantity; i++){
+    for(int i = 0; i <= maps.tile.quantity; i++){
         char _;
         while((_ = fgetc(file)) != EOF){
             if(_=='\n') break;
         }
     }
-   
-
-    for(int i = 0; i < AUTO_DETECT_ROW ; i++){
-        for(int j = 0; j < AUTO_DETECT_COL; j++)
-            fscanf(file, "%d", &map[i][j]);
-    } 
-
+    
+    // LER MATRIZ DE DADOS DO MAPA
+    for(int i = 0; i < maps.rows; i++){
+        for(int j = 0; j < maps.cols; j++)
+            fscanf(file, "%d", &maps.source[i][j]);
+    }
    
     fclose(file);
 
 
-    configure_tiles(&tiles, &map, filename);
+    configure_tiles(&maps, filename);
 
-    return map;
+    return maps;
 
 }
 
 
 
-void free_map(Map map){
-    for(int i = 0; i < AUTO_DETECT_ROW; i++)
-        free(map[i]);        
+void free_map(Map *map){
+    for(int i = 0; i < map->rows; i++)
+        free(map->source[i]);        
 
-    free(map);
+    free(map->source);
 }
 
 
 
-void free_image_src(String* path, int row){
+void free_image_src(char** path, int row){
     for(int i = 0; i < row; i++)
         free(path[i]);
 }
 
 
 
-void draw_map(Map map, double scale){
+void draw_map(Map* map, double scale){
    
 
-    for(int i = 0; i < AUTO_DETECT_ROW; i++){
-        for(int j = 0; j < AUTO_DETECT_COL; j++){        
-            for(int k = 0; k < tiles.quantity; k++){
-                if(map[i][j] == k){
+    for(int i = 0; i < map->rows; i++){
+        for(int j = 0; j < map->cols; j++){        
+            for(int k = 0; k < map->tile.quantity; k++){
+                if(map->source[i][j] == k){
 
                     // MODIFICAR PROPRIEDADES COM BASE NA ESCALA DO DESENHO
-    
-                    tiles.dimen[i][j].w = al_get_bitmap_width(tiles.src[k])  * scale;
-                    tiles.dimen[i][j].h = al_get_bitmap_height(tiles.src[k]) * scale;
-            
-                    tiles.coord[i][j].x = j * tiles.dimen[i][j].w;
-                    tiles.coord[i][j].y = i * tiles.dimen[i][j].h;
+                    map->tile.dimen[i][j].w = al_get_bitmap_width(map->tile.src[k])  * scale;
+                    map->tile.dimen[i][j].h = al_get_bitmap_height(map->tile.src[k]) * scale;
+                    map->tile.coord[i][j].x = j * map->tile.dimen[i][j].w;
+                    map->tile.coord[i][j].y = i * map->tile.dimen[i][j].h;
 
-                    draw_image(tiles.src[k], tiles.coord[i][j].x, tiles.coord[i][j].y, scale, 0);
+                    draw_image(map->tile.src[k], map->tile.coord[i][j].x, map->tile.coord[i][j].y, scale, 0);
                 }
             }
         }
     }
 }
-// collision(item1, item2){
-//     return ( 
-//         item1.x + item1.w >= item2.x && item1.x <= item2.x + item2.w &&
-//         item1.y <= item2.y + item2.h && item1.y + item1.h >= item2.y
-//     );
-// }
 
 
-bool collision_map(Map *map, Actor *character,int start_tile, int end_tile){
-    for(int i = 0; i < AUTO_DETECT_ROW; i++){
-        for(int j = 0; j < AUTO_DETECT_COL; j++){
+
+bool collision_map(Map* map, Actor *character,int start_tile, int end_tile){
+    for(int i = 0; i < map->rows; i++){
+        for(int j = 0; j < map->cols; j++){
             for(int tile = start_tile; tile < end_tile; tile++){
-                if((*map)[i][j] == tile){
-                    if( character->coord.x + character->size.w >= tiles.coord[i][j].x &&
-                        character->coord.x <= tiles.coord[i][j].x + tiles.dimen[i][j].w &&
-                        character->coord.y <= tiles.coord[i][j].y + tiles.dimen[i][j].h &&
-                        character->coord.y + character->size.h >= tiles.coord[i][j].y
+                if(map->source[i][j] == tile){
+                    if( character->coord.x + character->size.w >= map->tile.coord[i][j].x &&
+                        character->coord.x <= map->tile.coord[i][j].x + map->tile.dimen[i][j].w &&
+                        character->coord.y <= map->tile.coord[i][j].y + map->tile.dimen[i][j].h &&
+                        character->coord.y + character->size.h >= map->tile.coord[i][j].y
                     ){
                         return true;
                     }

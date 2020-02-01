@@ -62,7 +62,7 @@ bool init_all_lib(void){
 
 
 
-Window create_window(int width, int height, const String title){
+Window create_window(int width, int height, const char* title){
     Window screen = NULL;
 
     screen = al_create_display(width, height);
@@ -81,7 +81,7 @@ Window create_window(int width, int height, const String title){
 
 
 
-Image load_image(const String src){
+Image load_image(const char* src){
 
     Image img = NULL;
  
@@ -241,7 +241,7 @@ void keyboard(Event* event, int* sense_x, int* sense_y){
 
 
 
-void destroy(void* element, const String type){
+void destroy(void* element, const char* type){
     if(!strcmp(type, "Window"))
         al_destroy_display((Window) element);
     else if(!strcmp(type, "Events"))

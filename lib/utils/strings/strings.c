@@ -1,9 +1,8 @@
-#include "../../types/types.h"
 
 
-String copy(String destination, String source){
+char* copy(char* destination, char* source){
 
-    char *start = destination;
+    char* start = destination;
  
     while(*source != '\0' && *source != '\n')
     {

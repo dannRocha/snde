@@ -3,8 +3,8 @@
 
 
 
-typedef int** Map;
-typedef char* String;
+// typedef char* String;
+
 
 
 typedef ALLEGRO_DISPLAY*     Window;
@@ -12,9 +12,6 @@ typedef ALLEGRO_BITMAP*      Image;
 typedef ALLEGRO_EVENT_QUEUE* Events;
 typedef ALLEGRO_EVENT        Event;
 typedef ALLEGRO_TIMEOUT      Time;
-
-
-
 
 
 
@@ -61,6 +58,17 @@ typedef struct {
     int quantity;
 
 } Tiles;
+
+
+
+typedef struct Map
+{
+    int** source;
+    int rows;
+    int cols;
+    Tiles tile;
+
+} Map;
 
 
 

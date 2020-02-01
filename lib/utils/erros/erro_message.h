@@ -5,7 +5,7 @@
 
 #include "erro_message.c"
 
-void message_error(const String message);
+void message_error(const char* message);
 
 
 #endif //__ERROR_MESSAGE__H__

@@ -2,7 +2,7 @@
 #define __STRINGS_SNDE_H__
 #include "strings.c"
 
-String copy(String destination, String source);
+char* copy(char* destination, char* source);
 
 
 #endif //__STRINGS_SNDE_H__
