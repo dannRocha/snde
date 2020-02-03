@@ -12,9 +12,8 @@ int main(int argc, char** argv)
     Window screen   = create_window(840, 480, "LIBRARY");
     Events events   = add_event_listener(screen);
     Map scenarios   = load_map("map/map_example1.map");
-   
     Actor obj;
-    obj.test         = load_image("water_00.bmp");
+    obj.test        = load_image("water_00.bmp");
     
     int speed = 10;
     int sense_x = 0;
@@ -26,7 +25,9 @@ int main(int argc, char** argv)
     obj.size.h = 32;
     
     while (true)
-    {   
+    {
+
+
         Event event = get_event(events);
 
         keyboard(&event, &sense_x, &sense_y);

@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "../snde.h"
 #include "../types/types.h"
-
+enum {
+    MARGIN = 2
+};
 
 
 char** path_bitmap(char* filename){
@@ -191,17 +193,51 @@ void draw_map(Map* map, double scale){
                     map->tile.coord[i][j].y = i * map->tile.dimen[i][j].h;
 
                     draw_image(map->tile.src[k], map->tile.coord[i][j].x, map->tile.coord[i][j].y, scale, 0);
+                    break;
                 }
             }
         }
     }
+
 }
 
 
 
 bool collision_map(Map* map, Actor *character,int start_tile, int end_tile){
-    for(int i = 0; i < map->rows; i++){
-        for(int j = 0; j < map->cols; j++){
+    
+    int row = (character->coord.y / map->tile.dimen[0][0].h);
+    int col = (character->coord.x / map->tile.dimen[0][0].w);
+
+    
+
+#if __DEBUGGER__
+
+    printf("row: %d -> row_map: %d\n", row, map->rows);
+    printf("col: %d -> row_map: %d\n", col, map->cols);
+    printf("===============\n");
+    
+
+#endif
+ 
+   
+    int row_start   = row - MARGIN;
+    int row_end     = row + MARGIN;
+
+    int col_start   = col - MARGIN; 
+    int col_end     = col + MARGIN; 
+
+
+    if(row_start <= 0) row_start = 0;
+    else if(row_end >= map->rows) row_end = map->rows;
+            
+    if(col_start <= 0) col_start = 0;
+    else if(col_end >= map->cols) col_end = map->cols;
+    
+
+    for(int i = row_start; i < row_end; i++){
+        
+        for(int j = col_start; j < col_end; j++){
+                    
             for(int tile = start_tile; tile < end_tile; tile++){
                 if(map->source[i][j] == tile){
                     if( character->coord.x + character->size.w >= map->tile.coord[i][j].x &&
@@ -215,6 +251,7 @@ bool collision_map(Map* map, Actor *character,int start_tile, int end_tile){
             }
         }
     }
+
 
     return false;
 }
