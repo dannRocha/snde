@@ -12,7 +12,7 @@ typedef ALLEGRO_BITMAP*      Image;
 typedef ALLEGRO_EVENT_QUEUE* Events;
 typedef ALLEGRO_EVENT        Event;
 typedef ALLEGRO_TIMEOUT      Time;
-
+typedef ALLEGRO_TRANSFORM    Camera;
 
 
 typedef struct {

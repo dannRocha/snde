@@ -6,7 +6,7 @@ enum {
 };
 
 
-char** path_bitmap(char* filename){
+static char** path_bitmap(char* filename){
     
     FILE* file = fopen(filename, "r");
     
@@ -32,11 +32,13 @@ char** path_bitmap(char* filename){
     for(int i = 0; i < sprites; i++)
         path[i] = malloc((255) * sizeof(char));
     
-    int count = 0;    
     while(fgets(buffer, buffer_len, file)){
+        
+        static int i = 0;    
+        
         if(strstr(buffer, ".bmp") != NULL || strstr(buffer, ".png") != NULL){
-            copy(path[count], buffer);
-            count++;
+            copy(path[i], buffer);
+            i++;
         }
     }
 
@@ -53,7 +55,7 @@ char** path_bitmap(char* filename){
 
 
 
-void configure_tiles(Map *map, char* filename){
+static void configure_tiles(Map *map, char* filename){
 
 
     map->tile.src = malloc((map->tile.quantity) * sizeof(Image ));
@@ -187,12 +189,15 @@ void draw_map(Map* map, double scale){
                 if(map->source[i][j] == k){
 
                     // MODIFICAR PROPRIEDADES COM BASE NA ESCALA DO DESENHO
-                    map->tile.dimen[i][j].w = al_get_bitmap_width(map->tile.src[k])  * scale;
-                    map->tile.dimen[i][j].h = al_get_bitmap_height(map->tile.src[k]) * scale;
-                    map->tile.coord[i][j].x = j * map->tile.dimen[i][j].w;
-                    map->tile.coord[i][j].y = i * map->tile.dimen[i][j].h;
+                    if(scale != 1){
+                        map->tile.dimen[i][j].w = al_get_bitmap_width(map->tile.src[k])  * scale;
+                        map->tile.dimen[i][j].h = al_get_bitmap_height(map->tile.src[k]) * scale;
+                        map->tile.coord[i][j].x = j * map->tile.dimen[i][j].w;
+                        map->tile.coord[i][j].y = i * map->tile.dimen[i][j].h;
+                    }
 
                     draw_image(map->tile.src[k], map->tile.coord[i][j].x, map->tile.coord[i][j].y, scale, 0);
+                    
                     break;
                 }
             }
@@ -257,3 +262,29 @@ bool collision_map(Map* map, Actor *character,int start_tile, int end_tile){
 }
 
 
+
+void move_camera(Window screen, Map *map, Actor *character){
+    
+    static Camera camera;
+    static Coord scroll;
+
+    static int x = 0;
+    static int y = 0;
+
+    x = (-al_get_display_width(screen) / 2) + (character->coord.x + character->size.w / 2);    
+    y = (-al_get_display_height(screen) / 2) + (character->coord.y + character->size.h / 2);
+    
+    if(x < (map->tile.coord[map->rows - 1][map->cols - 1].x + character->size.w / 2 + map->tile.dimen[0][0].w * 2) - x)
+        scroll.x  = x;
+    if(y < (map->tile.coord[map->rows - 1][map->cols - 1].y + character->size.h / 2 + map->tile.dimen[0][0].h * 2) - y)
+        scroll.y  = y;
+
+    if(x < 0) scroll.x = 0; 
+    if(y < 0) scroll.y = 0;
+    
+
+    al_identity_transform(&camera);
+    al_translate_transform(&camera, -scroll.x, -scroll.y);
+    al_use_transform(&camera); 
+
+}

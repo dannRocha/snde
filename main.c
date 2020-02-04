@@ -4,6 +4,8 @@
 //gcc -Wall main.c -o teste -lallegro -lallegro_image -lallegro_primitives
 
 
+
+
 int main(int argc, char** argv)
 {
     if(!init_all_lib())
@@ -23,6 +25,8 @@ int main(int argc, char** argv)
     obj.coord.y = 60;
     obj.size.w = 32;
     obj.size.h = 32;
+
+    
     
     while (true)
     {
@@ -36,7 +40,7 @@ int main(int argc, char** argv)
             break;
         
         draw_color_background(255, 255, 255);
-        draw_map(&scenarios, 1.5);
+        draw_map(&scenarios, 3);
         draw_image(obj.test, obj.coord.x, obj.coord.y, 1, 0);
         update_screen(60.0);
 
@@ -47,8 +51,13 @@ int main(int argc, char** argv)
 
         if(collision_map(&scenarios, &obj, 1, 2)){
             obj.coord.x = 32;
-            obj.coord.y = 60;
+            obj.coord.y = 110;
+            
         }
+
+
+
+        move_camera(screen, &scenarios, &obj);
     }
     
     destroy(screen, "Window");
