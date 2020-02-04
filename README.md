@@ -452,6 +452,7 @@ bool collision_map(Map *map, Actor *character,int start_tile, int end_tile);
 ```
 
 ***Exemplo 4.4***:
+**OBS:** Veja a seção de eventos para implementar a movimentação do seu personagem ```Actor```.
 <figure>
     <img src="docs/img/collision.gif" style="display: block; margin: 0 auto;">
     <figcaption>
@@ -459,12 +460,59 @@ bool collision_map(Map *map, Actor *character,int start_tile, int end_tile);
     </figcaption>
 </figure>
 
-### Camera
-    No implementation
+### Câmera
+Realizar o movimento ou rolagem da câmera/cenário com base em um ```Actor``` a biblioteca possui a função ```move_camera``` que recebe com parâmetro a janela alvo```Window```, o mapa```Map``` que vai possuir a rolagem e como objeto de orientação o Personagem ```Actor```.
+***Assinatura:***
+```cpp
+void move_camera(Window screen, Map *map, Actor *character);
 
+```
+
+***Exemplo 4.5***:
+```cpp
+#include "lib/snde.h"
+
+
+int main(int argc, char** argv){
+
+    if(!init_all_lib())
+        return -1;
+
+    Window screen = create_window(640, 480, "Desenhar mapa");
+    Map scenario = load_map("src/map/scenario_00.map");
+    Actor character;
+
+    double scale = 3;
+    double frams = 60;
+
+    while(true){
+        draw_map(scenario, scale);
+        move_camera(screen, &scenario, &character);
+        update_screen(frams);
+    }
+
+
+    destroy(screen, "Window");
+    free_map(scenario);
+
+
+    return 0;
+}
+
+```
+***Exemplo 4.6***:
+
+**OBS:** Veja a seção de eventos para implementar a movimentação do seu personagem ```Actor```.
+<figure>
+    <img src="docs/img/camera.gif" style="display: block; margin: 0 auto;">
+    <figcaption>
+    O exemplo acima mostra o sistema de colisão do mapa sendo utilizado em conjunto com o movimento da câmera. No gif quando o quadrado azul colide com as paredes ele volta pra posição inicial. <strong>OBS: Mapa desenhado em escala 3</strong>;
+    </figcaption>
+</figure>
 ##
 
 ## 05 - Eventos
+
 Nos exemplos anterios não foi implementado nenhum evento, até o mais simples deles o de fechar a janela do programa.
 
 Existe dois tipos de dados para iniciar o trabalho de eventos no seu software, ***```Events```*** e ***```Event```*** , e duas funções para iniciar os eventos e obter o evento que foi ativado ***```add_event_listener```*** e ***```get_event```*** .
@@ -551,7 +599,9 @@ typedef struct  Character{
 ## 7 - Física
 ### Entre dois *```Actor```*
     documentation in progress
-### Circulos
+### Colisão Circulos
     documentation in progress
-### Quadrados
+### Colisão Quadrados
+    documentation in progress
+### Gravidade
     documentation in progress
