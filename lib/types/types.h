@@ -42,7 +42,7 @@ typedef struct{
 typedef struct  Character{
     
     Coord coord;
-    Dimension size;
+    Dimension dimen;
     Attributes attr;
     Sprites img;
     Image test;

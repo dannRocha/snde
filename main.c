@@ -23,8 +23,8 @@ int main(int argc, char** argv)
     
     obj.coord.x = 32;
     obj.coord.y = 60;
-    obj.size.w = 32;
-    obj.size.h = 32;
+    obj.dimen.w = 32;
+    obj.dimen.h = 32;
 
     
     

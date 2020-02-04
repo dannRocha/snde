@@ -245,10 +245,10 @@ bool collision_map(Map* map, Actor *character,int start_tile, int end_tile){
                     
             for(int tile = start_tile; tile < end_tile; tile++){
                 if(map->source[i][j] == tile){
-                    if( character->coord.x + character->size.w >= map->tile.coord[i][j].x &&
+                    if( character->coord.x + character->dimen.w >= map->tile.coord[i][j].x &&
                         character->coord.x <= map->tile.coord[i][j].x + map->tile.dimen[i][j].w &&
                         character->coord.y <= map->tile.coord[i][j].y + map->tile.dimen[i][j].h &&
-                        character->coord.y + character->size.h >= map->tile.coord[i][j].y
+                        character->coord.y + character->dimen.h >= map->tile.coord[i][j].y
                     ){
                         return true;
                     }
@@ -271,12 +271,12 @@ void move_camera(Window screen, Map *map, Actor *character){
     static int x = 0;
     static int y = 0;
 
-    x = (-al_get_display_width(screen) / 2) + (character->coord.x + character->size.w / 2);    
-    y = (-al_get_display_height(screen) / 2) + (character->coord.y + character->size.h / 2);
+    x = (-al_get_display_width(screen) / 2) + (character->coord.x + character->dimen.w / 2);    
+    y = (-al_get_display_height(screen) / 2) + (character->coord.y + character->dimen.h / 2);
     
-    if(x < (map->tile.coord[map->rows - 1][map->cols - 1].x + character->size.w / 2 + map->tile.dimen[0][0].w * 2) - x)
+    if(x < (map->tile.coord[map->rows - 1][map->cols - 1].x + character->dimen.w / 2 + map->tile.dimen[0][0].w * 2) - x)
         scroll.x  = x;
-    if(y < (map->tile.coord[map->rows - 1][map->cols - 1].y + character->size.h / 2 + map->tile.dimen[0][0].h * 2) - y)
+    if(y < (map->tile.coord[map->rows - 1][map->cols - 1].y + character->dimen.h / 2 + map->tile.dimen[0][0].h * 2) - y)
         scroll.y  = y;
 
     if(x < 0) scroll.x = 0; 
