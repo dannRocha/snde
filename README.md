@@ -365,7 +365,8 @@ Para carregar o mapa é necessário chamar a função ***```load_map```*** que r
 
 ***Assinatura:***
 ```cpp
-Map load_map(const char* filename);
+Map load_map(const char *filename, double scale);
+
 ```
 ```cpp
 void free_map(Map map);
@@ -380,8 +381,9 @@ int main(int argc, char** argv){
 
     if(!init_all_lib())
         return -1;
-
-    Map scenarios = load_map("src/map/scenario_00.map");
+    
+    double scale = 2.0;
+    Map scenarios = load_map("src/map/scenario_00.map", scale);
     
     /*
     
@@ -403,7 +405,8 @@ Para desenhar o mapa, é necessário passar a variavel do tipo ***```Map```*** q
 
 ***Assinatura:***
 ```cpp
-void draw_map(Map map, double scale);
+void draw_map(Map *map, Window *screen);
+
 ```
 ***Exemplo 4.3***:
 ```cpp
@@ -416,14 +419,13 @@ int main(int argc, char** argv){
         return -1;
 
     Window screen = create_window(640, 480, "Desenhar mapa");
-    Map scenario = load_map("src/map/scenario_00.map");
+    double scale = 2;
+    Map scenario = load_map("src/map/scenario_00.map", scale);
     
-
-    double scale = 1;
     double frams = 60;
 
     while(true){
-        draw_map(scenario, scale);
+        draw_map(&scenario, &screen);
         update_screen(frams);
     }
 
@@ -478,15 +480,17 @@ int main(int argc, char** argv){
     if(!init_all_lib())
         return -1;
 
-    Window screen = create_window(640, 480, "Desenhar mapa");
-    Map scenario = load_map("src/map/scenario_00.map");
-    Actor character;
-
-    double scale = 3;
+    double scale = 2.0;
     double frams = 60;
 
+    Window screen = create_window(640, 480, "Desenhar mapa");
+    Map scenario = load_map("src/map/scenario_00.map", scale);
+    Actor character;
+
+    
+
     while(true){
-        draw_map(scenario, scale);
+        draw_map(&scenario, &screen);
         move_camera(screen, &scenario, &character);
         update_screen(frams);
     }
@@ -521,7 +525,8 @@ Existe dois tipos de dados para iniciar o trabalho de eventos no seu software, *
 * ***```add_event_listener```*** função inicializa todos os eventos e recebe como parâmetro a janela que deseja observar e retorna um ponteiro com do tipo ***```Events```*** .
     ***Assinatura:***
     ```cpp
-    Events add_event_listener(Window screen);
+    Events add_event_listener(Window *screen);
+    
     ```
 * ***```get_event```*** função obtem uma ***```struct```*** o evento que o estado dos eventos da fila de eventos, que recebe como parâmetro
 
@@ -542,7 +547,7 @@ int main(int argc, char** argv){
         return -1;
 
     Window screen = create_window(640, 480, "Adicionando Eventos");
-    Events event_queue = add_event_listener(screen);
+    Events event_queue = add_event_listener(&screen);
 
 
     while(true){
