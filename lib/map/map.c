@@ -6,7 +6,7 @@
 enum 
 {
     MARGIN = 2,
-    MARGIN_VISIBLE_WIDTH = 2
+    MARGIN_VISIBLE = 2
 };
 
 
@@ -202,13 +202,13 @@ void draw_map(Map *map, Window *screen)
     if(!map->check_visible)
     {
         map->visible_tile_width     = size_block_width  + 1;
-        map->visible_tile_height    = size_block_height + 1;
+        map->visible_tile_height    = size_block_height;
         map->check_visible          = true;
     }
 
 
     for(int i = map->visible_tile_height - size_block_height; i < map->visible_tile_height; i++)
-        for(int j = map->visible_tile_width - size_block_width - MARGIN_VISIBLE_WIDTH; j < map->visible_tile_width + MARGIN_VISIBLE_WIDTH; j++)
+        for(int j = map->visible_tile_width - size_block_width - MARGIN_VISIBLE; j < map->visible_tile_width + MARGIN_VISIBLE; j++)
             for(int k = 0; k < map->tile.quantity; k++)
             {
                 if(map->source[i][j] == k)
@@ -276,7 +276,7 @@ void move_camera(Window screen, Map *map, Actor *character)
 
     
     // LIMITAR O MOVIMENTO DA CAMERA NA ALTURA
-    if(character->coord.y + screen.height / 2 >= map->height)
+    if(character->coord.y +  screen.height / 2 >= map->height)
         scroll.y = map->height - screen.height + map->tile.dimen[0][0].h;
     
     // LIMITAR O MOVIMENTO DA CAMERA NA LARGURA
@@ -289,7 +289,12 @@ void move_camera(Window screen, Map *map, Actor *character)
     
     // AUTUALIZAR OS TILES VISIVEIS DA LINHA
     if(scroll.y >= 0)
+    {
         map->visible_tile_height  = ((screen.height / map->tile.dimen[0][0].h ) + (scroll.y / map->tile.dimen[0][0].h));
+        
+        if(map->visible_tile_height + 2 >= map->rows)
+            map->visible_tile_height = map->rows;
+    }
 
 
     if(scroll.x < 0) scroll.x = 0;
