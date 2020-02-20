@@ -193,11 +193,11 @@ void free_image_src(char **path, int row)
 
 
 
-void draw_map(Map* map, Window screen)
+void draw_map(Map *map, Window *screen)
 {
 
-    int size_block_width    = screen.width  / map->tile.dimen[0][0].w;
-    int size_block_height   = screen.height / map->tile.dimen[0][0].h;
+    int size_block_width    = screen->width  / map->tile.dimen[0][0].w;
+    int size_block_height   = screen->height / map->tile.dimen[0][0].h;
     
     if(!map->check_visible)
     {

@@ -42,7 +42,7 @@ int main(int argc, char** argv)
             break;
         
         draw_color_background(66, 66, 255);
-        draw_map(&scenarios, screen);
+        draw_map(&scenarios, &screen);
         draw_image(obj.test, obj.coord.x, obj.coord.y, 1, 0);
         update_screen(60.0);
 
