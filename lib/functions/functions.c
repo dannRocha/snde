@@ -63,17 +63,23 @@ bool init_all_lib(void){
 
 
 Window create_window(int width, int height, const char* title){
-    Window screen = NULL;
-
-    screen = al_create_display(width, height);
     
-    if(!screen){
+    Window screen;
+    
+    screen.display  = al_create_display(width, height);
+    screen.width    = width;
+    screen.height   = height;
+    screen.title    = title;
+
+    if(!screen.display){
         message_error("Erro ao criar janela");
-        al_destroy_display(screen);
+        al_destroy_display(screen.display);
         exit(-1);
     }
     
-    al_set_window_title(screen, title);
+    al_set_window_title(screen.display, title);
+
+
 
     return screen;
 
@@ -133,7 +139,7 @@ void update_screen(double frameperseconds){
 
 
 
-Events add_event_listener(Window screen){
+Events add_event_listener(Window *screen){
     
     Events event_queue = NULL;
     
@@ -148,7 +154,7 @@ Events add_event_listener(Window screen){
     }
 
 
-    al_register_event_source(event_queue, al_get_display_event_source(screen));
+    al_register_event_source(event_queue, al_get_display_event_source(screen->display));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     
 
@@ -243,7 +249,7 @@ void keyboard(Event* event, int* sense_x, int* sense_y){
 
 void destroy(void* element, const char* type){
     if(!strcmp(type, "Window"))
-        al_destroy_display((Window) element);
+        al_destroy_display((Display) element);
     else if(!strcmp(type, "Events"))
         al_destroy_event_queue((Events) element);
     else if(!strcmp(type, "Image"))

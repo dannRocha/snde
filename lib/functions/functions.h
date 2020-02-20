@@ -33,7 +33,7 @@ void draw_image(Image img, float x,float y, double scale, int flags );
 #ifndef __EVENT_SNDE_H__
 #define __EVENT_SNDE_H__
 
-Events add_event_listener(Window screen);
+Events add_event_listener(Window *screen);
 Event get_event(Events events);
 Event getEventKeyboard(Events events);
 

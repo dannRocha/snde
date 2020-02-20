@@ -10,6 +10,7 @@
         "stdlib.h": "c",
         "mold.h": "c",
         "tools.h": "c",
-        "snde.h": "c"
+        "snde.h": "c",
+        "functions.h": "c"
     }
 }
