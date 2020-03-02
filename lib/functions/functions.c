@@ -8,13 +8,6 @@
 #include "../types/types.h"
 
 
-// typedef ALLEGRO_DISPLAY*     Window;
-// typedef ALLEGRO_BITMAP*      Image;
-// typedef ALLEGRO_EVENT_QUEUE* Events;
-// typedef ALLEGRO_EVENT        Event;
-// typedef ALLEGRO_TIMEOUT      Time;
-
-
 
 enum {
     WINDOW_CLOSE    = ALLEGRO_EVENT_DISPLAY_CLOSE,
@@ -244,20 +237,3 @@ void keyboard(Event* event, int* sense_x, int* sense_y){
         }
     }
 }
-
-
-
-void destroy(void* element, const char* type){
-    if(!strcmp(type, "Window"))
-        al_destroy_display((Display) element);
-    else if(!strcmp(type, "Events"))
-        al_destroy_event_queue((Events) element);
-    else if(!strcmp(type, "Image"))
-        al_destroy_bitmap((Image) element);
-    // else if(!strcmp(type, "Map"))
-    //     free_map( element);
-
-
-}
-
-

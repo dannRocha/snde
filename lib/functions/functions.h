@@ -52,7 +52,6 @@ void update_screen(double frameperseconds);
 #ifndef __UTILS_SNDE_H__
 #define __UTILS_SNDE_H__
 
-void destroy(void* element, const char* type);
 void keyboard(Event* event, int* sense_x, int* sense_y);
 
 #endif //__UTILS_SNDE_H__

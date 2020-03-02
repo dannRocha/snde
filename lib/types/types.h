@@ -48,7 +48,6 @@ typedef struct Attributes
 
 typedef struct  Character
 {
-    
     Coord coord;
     Dimension dimen;
     Attributes attr;
@@ -59,29 +58,44 @@ typedef struct  Character
 
 
 
-typedef struct Tiles
-{
-    Coord **coord;
-    Dimension **dimen;
-    Image *src;
-    int quantity;
+typedef struct Tile{
+    int x;
+    int y;
+    int width;
+    int height;
+    char *label;
+    char *id;
 
-} Tiles;
-
-
+} Tile;
 
 typedef struct Map
 {
     int **source;
+    
     int rows;
     int cols;
-    int width;
-    int height;
-    int visible_tile_width;
-    int visible_tile_height;
+
+    long int width;
+    long int height;
+    
+    int visible_tile_width_max;
+    int visible_tile_height_max;
+
+    int visible_tile_width_min;
+    int visible_tile_height_min;
+
+    int number_for_tiles;
+    
+    Coord scroll;
+
+    bool set_scroll;
+    bool there_is_a_collision_bitmap;
     bool check_visible;
+    
     double scale;
-    Tiles tile;
+    
+    Tile **tiles;
+    Image *bitmap; 
 
 } Map;
 

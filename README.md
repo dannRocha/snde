@@ -466,7 +466,7 @@ bool collision_map(Map *map, Actor *character,int start_tile, int end_tile);
 Realizar o movimento ou rolagem da câmera/cenário com base em um ```Actor``` a biblioteca possui a função ```move_camera``` que recebe com parâmetro a janela alvo```Window```, o mapa```Map``` que vai possuir a rolagem e como objeto de orientação o Personagem ```Actor```.
 ***Assinatura:***
 ```cpp
-void move_camera(Window screen, Map *map, Actor *character);
+void move_camera(Window *screen, Map *map, Actor *character);
 
 ```
 
@@ -491,7 +491,7 @@ int main(int argc, char** argv){
 
     while(true){
         draw_map(&scenario, &screen);
-        move_camera(screen, &scenario, &character);
+        move_camera(&screen, &scenario, &character);
         update_screen(frams);
     }
 
