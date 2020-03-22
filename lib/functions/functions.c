@@ -4,6 +4,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_font.h>
 #include "../utils/tools.h"
 #include "../types/types.h"
 
@@ -50,13 +52,37 @@ bool init_all_lib(void){
         message_error("Error ao inicializar ADDON DE PRIMITIVOS");
         return false;
     }
+
+    // if(!al_init_font_addon()){
+    //     fprintf(stderr, "Error ao inicializar ADDON de FONT");
+    //     return false;
+    // }
+
+
+    // if(!al_init_ttf_addon()){
+    //     fprintf(stderr, "Error ao inicializar ADDON de TTF");
+    //     return false;
+    // }
+
     return true;
 }
 
 
+Window create_window(u_int16_t width, u_int16_t height, const char* title)
+{   
+       
+    if(width <= 0 || height <= 0)
+    {
+        fprintf(stderr, "\nError: Largura ou altura da janela nao pode ser menor ou igual a 0 (zero)\n");
+        exit(-1);
+    }
 
-Window create_window(int width, int height, const char* title){
-    
+    if(title == NULL)
+    {
+        fprintf(stderr, "\nError: Titulo da janela nao pode ser NULL\n");
+        exit(-1);
+    }
+
     Window screen;
     
     screen.display  = al_create_display(width, height);
@@ -87,7 +113,7 @@ Image load_image(const char* src){
     img = al_load_bitmap(src);
     
     if(!img){
-        message_error("Error ao carregar imagem");
+        fprintf(stderr, "Error ao carregar imagem %s\n", src);
         al_destroy_bitmap(img);
         exit(-1);
     }
@@ -134,6 +160,8 @@ void update_screen(double frameperseconds){
 
 Events add_event_listener(Window *screen){
     
+    // static Window screen_ = screen;
+    
     Events event_queue = NULL;
     
     event_queue = al_create_event_queue();
@@ -162,7 +190,7 @@ Event get_event(Events events){
     const double timeout_clock = 0.005;
 
     Event event;
-    Time timeout;
+    TimerOut timeout;
     al_init_timeout(&timeout, timeout_clock);
 
     al_wait_for_event_until(events, &event, &timeout);

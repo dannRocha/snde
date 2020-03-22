@@ -257,21 +257,30 @@ Para a criação de um arquivo de mapa deve ser criado com o esquema abaixo.
 
 ***Exemplo 4.0***:
 ```cpp
-ALTURA LARGURA QUANTIDA_DE_TILES
-caminho_do_tile_00
-caminho_do_tile_01
-01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
-00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 01 01 01 01 00 00 01 00 00 01 01 01 01 00 00 00 00 01
-01 00 00 00 01 00 00 00 00 00 01 02 02 01 00 00 00 00 01
-01 00 00 00 01 00 00 00 00 00 01 02 02 01 00 00 00 00 01
-01 00 00 00 01 00 00 01 00 00 01 01 01 01 00 00 00 00 01
-01 00 00 00 00 00 00 01 00 00 01 00 00 01 00 00 00 00 01
-01 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 00 00 00 01 00 00 01 01 01 01 01 01 00 00 01 01 01 01
-01 00 00 00 01 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 00 00 00 01 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
+(stateless)
+{
+    id: "-" label: "ground" src: "src/bmp/map/ground.bmp"
+    id: "~" label: "water"  src: "src/bmp/map/water.bmp"
+}
+(collision)
+{
+    id: "#" label: "wall"   src: "src/bmp/map/wall.bmp"
+}
+(map)
+{
+    ###############################
+    #------------#----------------#
+    #--#---------#------####------#
+    ########-----#------#~~#------#
+    #------#-----#------####------#
+    #------#-----#----------------#
+    #------#-----########--########
+    #------#---------------#------#
+    #------#-----#####--####------#
+    #------------#----------------#
+    #------#-----#----------------#
+    ###############################
+}
 ```
 ##
 ***Exemplo 4.1***:
@@ -287,72 +296,101 @@ caminho_do_tile_01
 Árvore de diretórios.
 
 /src|
-|   |--bmp/
-|   |--|---map/
-|      |----|---ground.bmp
-|           |---wall.bmp
-|           |---water.bmp
+|   *--bmp/
+|   *--*---map/
+|      *----*---ground.bmp
+|           *---wall.bmp
+|           *---water.bmp
 |   
-|   |--map/
-|   |--|--scenario_00.map
+|   *--map/
+|   *--*--scenario_00.map
 |
 |main.c
 ```
 ```cpp
-12 19 3
-src/bmp/map/ground.bmp
-src/bmp/map/wall.bmp
-src/bmp/map/water.bmp
-01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
-00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 01 01 01 01 00 00 01 00 00 01 01 01 01 00 00 00 00 01
-01 00 00 00 01 00 00 00 00 00 01 02 02 01 00 00 00 00 01
-01 00 00 00 01 00 00 00 00 00 01 02 02 01 00 00 00 00 01
-01 00 00 00 01 00 00 01 00 00 01 01 01 01 00 00 00 00 01
-01 00 00 00 00 00 00 01 00 00 01 00 00 01 00 00 00 00 01
-01 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 00 00 00 01 00 00 01 01 01 01 01 01 00 00 01 01 01 01
-01 00 00 00 01 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 00 00 00 01 00 00 01 00 00 00 00 00 00 00 00 00 00 01
-01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
-
+(stateless)
+{
+    id: "-" label: "ground" src: "src/bmp/map/ground.bmp"
+    id: "~" label: "water"  src: "src/bmp/map/water.bmp"
+}
+(collision)
+{
+    id: "#" label: "wall"   src: "src/bmp/map/wall.bmp"
+}
+(map)
+{
+    ###############################
+    #------------#----------------#
+    #--#---------#------####------#
+    ########-----#------#~~#------#
+    #------#-----#------####------#
+    #------#-----#----------------#
+    #------#-----########--########
+    #------#---------------#------#
+    #------#-----#####--####------#
+    #------------#----------------#
+    #------#-----#----------------#
+    ###############################
+}
 ```
 ***OBS:***
 * Cabeçalho
+```cpp
+(stateless)
+{
+    id: "-" label: "ground" src: "src/bmp/map/ground.bmp"
+    |
+    *-->    id: "identificação do tile no mapa - caracter unico"
+    |
+    *--> label: "Identifição legivel do tile e que pode ser utilizado do codigo caso seja necessário"
+    |
+    *-->   src: "Caminho completo do Tile, começando da raiz do projeto"
+}
+
+(collsion)
+{
+}
+
+(especial)
+{
+}
+
+(map)
+{
+}
 ```
-12 19 3
-src/bmp/map/ground_12.bmp
-src/bmp/map/wall_11.bmp
-src/bmp/map/water_00.bmp
-```
-* Mapa
+* **Tiles**
+    * ***stateless***:
+        Tiles que não possuem colisão e que serão ignorados na verificação de colisão. 
+    * ***collision***:
+        Tiles que possuem collisão e que são marcados para vefificar a colisão 
+    * ***especial***:
+        A seção **especial** como os outros anteriores é opcinal  existir e tem a mesma caracteristicas do **collision**.
+
+    Para que as configurações seja interpredadas corretamente é necessário a existência de no minimo uma dessas seções.
+    <br/> 
+* **Mapa**
+    A seção do mapa é obrigatório existir e tem que ser prenchida com no minimo com o character vazio '.' (ponto).
+    
+    O mapa tem ter tamanhos concisos. Exemplo, caso a primeira linha contenha 'N' de tamanho todas as linhas deve seguir o 'N' de tamanho e a regra também é aplicada para as colunas, mas podendo ser diferente as linhas, ou seja o mapa pode ter 'N' x 'M' de tamanho.
 
 ```cpp
-12 x 19
+(map)
+{
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+    .............................................
+}
 
-01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
-00                          |
-01                          |
-01                       LARGURA: 19
-01
-01 -- ALTURA: 12
-01
-01
-01
-01
-01
-01
-
-```
-* Tiles
-```cpp
-QUANTIDADE_DE_TILES: 3
-
-00- src/bmp/map/ground.bmp
-01- src/bmp/map/wall.bmp
-02- src/bmp/map/water.bmp
-   |
-   |--> Caminho a partir da raiz do projeto
 ```
 
 ### Mapa montado
@@ -366,12 +404,8 @@ Para carregar o mapa é necessário chamar a função ***```load_map```*** que r
 ***Assinatura:***
 ```cpp
 Map load_map(const char *filename, double scale);
-
 ```
-```cpp
-void free_map(Map map);
 
-```
 ***Exemplo 4.2***:
 ```cpp
 #include "lib/snde.h"
@@ -395,18 +429,16 @@ int main(int argc, char** argv){
 
     return 0;
 }
-
 ```
 
 ##
 
 ### Desenhar mapa
-Para desenhar o mapa, é necessário passar a variavel do tipo ***```Map```*** que contem os dados do cenário.
+Para desenhar o mapa, é necessário passar as variaves do tipo ***```Window```*** e ***```Map```*** que contem os dados do cenário.
 
 ***Assinatura:***
 ```cpp
-void draw_map(Map *map, Window *screen);
-
+void static_camera(Window *screen, Map *map);
 ```
 ***Exemplo 4.3***:
 ```cpp
@@ -424,33 +456,33 @@ int main(int argc, char** argv){
     
     double frams = 60;
 
-    while(true){
-        draw_map(&scenario, &screen);
+    while(true)
+    {
+        static_camera(&screen, scenario);
         update_screen(frams);
     }
 
 
     destroy(screen, "Window");
-    free_map(scenario);
+    destroy(scenario, "Map");
 
 
     return 0;
 }
-
 ```
 
 ### Colisão
 Para adicionar colisão com o mapa, a biblioteca dispoe da função ***```collision_map```*** que retorna ***```false```*** se não houve colisão e ***```true```*** se houve colisão com os objetos que possuem colisão no cenário.
 
 A função ***```collision_map```*** recebe como parâmetros:
+* ```void (*callback(Tile *tile, Actor *character))```: Uma função de tratamento da colisão, caso não deseje implementar passe ```NULL``` como parâmetro.   
 * ```Map *map``` : Um ponteiro ou a referência para o mapa que deseja verificar a colisão.
 * ```Actor *character``` : Um ponteiro ou a referência para o um objeto jogavel ou não. Ex: Nave, Inimigo, Heroi etc.
-* ```int start_tile``` e ```int end_tile``` são respectivamente o intervalo de itens do mapa que vão possuir colisão.
+
 
 ***Assinatura:***
 ```cpp
-bool collision_map(Map *map, Actor *character,int start_tile, int end_tile);
-
+bool collision_map(void (*callback(Tile *tile, Actor *character)), Map *map, Actor *character);
 ```
 
 ***Exemplo 4.4***:
@@ -463,13 +495,15 @@ bool collision_map(Map *map, Actor *character,int start_tile, int end_tile);
 </figure>
 
 ### Câmera
-Realizar o movimento ou rolagem da câmera/cenário com base em um ```Actor``` a biblioteca possui a função ```move_camera``` que recebe com parâmetro a janela alvo```Window```, o mapa```Map``` que vai possuir a rolagem e como objeto de orientação o Personagem ```Actor```.
+Realizar o movimento ou rolagem da câmera/cenário com base em um ```Actor``` a biblioteca possui a função ```dynamic_camera``` que recebe com parâmetro a janela alvo```Window```, o mapa ```Map``` que vai possuir a rolagem e como objeto de orientação o Personagem ```Actor```.
 ***Assinatura:***
 ```cpp
-void move_camera(Window *screen, Map *map, Actor *character);
-
+void dynamic_camera(Window *screen, Map *map, Actor *character);
 ```
-
+Ou caso deseje uma camera estática utilize a função:
+```cpp
+void static_camera(Window *screen, Map *map);
+```
 ***Exemplo 4.5***:
 ```cpp
 #include "lib/snde.h"
@@ -489,20 +523,19 @@ int main(int argc, char** argv){
 
     
 
-    while(true){
-        draw_map(&scenario, &screen);
-        move_camera(&screen, &scenario, &character);
+    while(true)
+    {
+        dynamic_camera(&screen, &scenario, &character);
         update_screen(frams);
     }
 
 
     destroy(screen, "Window");
-    free_map(scenario);
+    destroy(scenario, "Map");
 
 
     return 0;
 }
-
 ```
 ***Exemplo 4.6***:
 
@@ -582,12 +615,16 @@ Na biblioteca há um estrutura com dados para criação de um personagem 2D, ***
 
 ***Assinatura:***
 ```cpp
-typedef struct  Character{
-    
+typedef struct  Character
+{
     Coord coord;
-    Dimension size;
+    Dimension dimen;
     Attributes attr;
-    Sprites img;
+    Sprites **mapping;
+    Image spritesheet;
+    Animation animation;
+    Events event_queue;
+    double scale;
 
 } Actor;
 ```
@@ -596,17 +633,66 @@ typedef struct  Character{
 
 ### Criar personagem
     documentation in progress
-### Animação
-    documentation in progress
-### Movimentação
-    documentation in progress
+Configurando o Actor com sprites e animações.
 
-## 7 - Física
-### Entre dois *```Actor```*
-    documentation in progress
-### Colisão Circulos
-    documentation in progress
-### Colisão Quadrados
-    documentation in progress
-### Gravidade
+### Animação
+Para realizar a animação dos sprites, a biblioteca possui a função ***```animation```*** , que recebe como parametros a referencia/ponteiro para um ***```Actor```***  os frames por secundo que cada frame terá de duração e a como terceiro e ultimoparametro a seleção de qual animação será exibida. 
+
+Para realizar a animação dos sprites de um ***```Actor```*** , a biblioteca possui a função ***```run_animation```*** que recebe os parâmetros ***```Actor```*** a ser animado, os frames por segundo que a reproduzirá, um número inteiro referente a animação a ser executada e o controle da animação  **```AnimationControl```**.
+
+***Assinatura:***
+
+```cpp
+void run_animation(Actor *character, double framesperseconds, int select_animation, AnimationControl control);
+```
+***Exemplo 6.0***:
+```cpp
+#include "lib/snde.h"
+
+
+int main(int argc, char** argv){
+
+    if(!init_all_lib())
+        return -1;
+
+    Window screen = create_window(640, 480, "Animação");
+    Events event_queue = add_event_listener(&screen);
+    Actor character;
+        character = load_spritesheet("src/bmp/animation/character2.png", 32, 32, 0,0, 10);
+    enum {
+        animation_of_walking_to_the_right = 1,
+        animation_of_walking_to_the_left  = 2  
+    };
+
+    const double framesperseconds = 15.0;
+
+    while(true){
+
+        Event event = get_events(event_queue);
+
+        if(event.type == CLOSE_WINDOW);
+            break;
+
+        run_animation(
+            &character, 
+            framesperseconds, 
+            animation_of_walking_to_the_right,
+            auto_play
+        );
+        
+    }
+
+
+    destroy(&screen, "Window");
+    destroy(event_queue, "Events");
+
+
+    return 0;
+}
+
+```
+#### Controle de Animação
+
+
+### Movimentação
     documentation in progress

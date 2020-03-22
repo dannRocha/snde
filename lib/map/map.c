@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include "transpiler/transpiler.h"
 #include "../snde.h"
 #include "../types/types.h"
-
+#include "../utils/strings/strings.h"
+#include "../utils/debug/debug.h"
 
 enum 
 {
@@ -29,13 +31,13 @@ static char **path_bitmap(const char *filename)
     
     char **path;
 
-    path =  malloc((sprites) * sizeof(char*));
+    path =  calloc(sprites, sizeof(char*));
 
     if(!path)
         message_error("Error ao alocar memoria para PATH ");
 
     for(int i = 0; i < sprites; i++)
-        path[i] = malloc((255) * sizeof(char));
+        path[i] = calloc(255, sizeof(char));
     
     int i = 0;
     while(fgets(buffer, buffer_len, file))
@@ -62,12 +64,12 @@ static char **path_bitmap(const char *filename)
 static void configure_tiles(Map *map, const char *filename, double scale)
 {
     
-    map->tiles      = (Tile** ) malloc((map->rows) * sizeof(Tile* ));
-    map->bitmap     = (Image* ) malloc((map->number_for_tiles * sizeof(Image )));
+    // map->tiles      = (Tile** ) malloc((map->rows) * sizeof(Tile* ));
+    map->bitmap     = (Image* ) calloc(map->number_for_tiles, sizeof(Image ));
 
 
-    if(map->tiles == NULL)
-        fprintf(stderr, "Error ao alocar memória para Matriz de Tiles\n");
+    // if(map->tiles == NULL)
+    //     fprintf(stderr, "Error ao alocar memória para Matriz de Tiles\n");
 
     if(map->bitmap == NULL)
         fprintf(stderr, "Error ao alocar memória para Array de Bitmaps\n");
@@ -83,8 +85,8 @@ static void configure_tiles(Map *map, const char *filename, double scale)
     
 
     // ALOCAR MEMORIA PARA A MATRIZ DE COORDENAS E DIMENSÕES DOS TILES
-    for(int i = 0; i < map->rows; i++)    
-        map->tiles[i] = (Tile* ) malloc((map->cols) * sizeof(Tile ));
+    // for(int i = 0; i < map->rows; i++)    
+    //     map->tiles[i] = (Tile* ) malloc((map->cols) * sizeof(Tile ));
 
 
     // CONFIGURAR COORDENADAS DOS TILES
@@ -95,9 +97,9 @@ static void configure_tiles(Map *map, const char *filename, double scale)
         for(int j = 0; j < map->cols; j++){
             if(map->source[i][j] == EMPTY_TILE)
             {
-                
-                map->tiles[i][j].width = al_get_bitmap_width(map->bitmap[0]) * scale;
-                map->tiles[i][j].height = al_get_bitmap_height(map->bitmap[0]) * scale;
+                map->tiles[i][j].width  =  al_get_bitmap_width(map->bitmap[0]) * map->scale;
+                map->tiles[i][j].height =  al_get_bitmap_height(map->bitmap[0]) * map->scale;
+
                 map->tiles[i][j].x = j * map->tiles[i][j].width;
                 map->tiles[i][j].y = i * map->tiles[i][j].height;
                 
@@ -108,7 +110,7 @@ static void configure_tiles(Map *map, const char *filename, double scale)
             {
                 if(map->source[i][j] == k)
                 {
-                    map->tiles[i][j].width = al_get_bitmap_width(map->bitmap[k]) * scale;
+                    map->tiles[i][j].width =  al_get_bitmap_width(map->bitmap[k]) * scale;
                     map->tiles[i][j].height = al_get_bitmap_height(map->bitmap[k]) * scale;
                     map->tiles[i][j].x = j * map->tiles[i][j].width;
                     map->tiles[i][j].y = i * map->tiles[i][j].height;
@@ -129,20 +131,35 @@ static void configure_tiles(Map *map, const char *filename, double scale)
 
 Map load_map(const char *filename, double scale)
 {
+    if(scale <= 0)
+    {
+        fprintf(stderr, "\"load_map\": scale nao pode ser negativo ou zero\n");
+        exit(-1);
+    }
+    if(filename == NULL)
+    {
+        fprintf(stderr, "\n\"load_map\": filename não pode ser nulo\n");
+        exit(-1);
+    }
 
     Map maps;
+        maps.number_of_tiles_with_collision = 0;
 
-    FILE *file = fopen(filename, "r");
+    const char *filename_transpiler = transpiler_map(&maps, filename);
+    
+
+    FILE *file = fopen(filename_transpiler, "r");
 
     if(file == NULL)
-    {   fprintf(stderr, "Error ao ler arquivo: %s\n", filename);
+    {   fprintf(stderr, "Error ao ler arquivo: %s\n", filename_transpiler);
         free(file);
         exit(-1);
     }
 
     fscanf(file, "%d %d %d", &maps.rows, &maps.cols, &maps.number_for_tiles);
+    
 
-    maps.source = (int** ) malloc((maps.rows) * sizeof(int* ));
+    maps.source = (int** ) calloc(maps.rows, sizeof(int* ));
     maps.scale = scale;
 
 
@@ -151,7 +168,7 @@ Map load_map(const char *filename, double scale)
 
 
     for(int i = 0; i < maps.rows; i++)
-        maps.source[i] = (int* ) malloc ((maps.cols) * sizeof(int));
+        maps.source[i] = (int* ) calloc (maps.cols, sizeof(int));
 
     // RESETAR A MEMORIA ALOCADA
     for(int i = 0; i < maps.rows; i++)
@@ -176,7 +193,7 @@ Map load_map(const char *filename, double scale)
     fclose(file);
 
 
-    configure_tiles(&maps, filename, scale);
+    configure_tiles(&maps, filename_transpiler, scale);
 
 
     maps.visible_tile_height_max = maps.rows;
@@ -192,7 +209,7 @@ Map load_map(const char *filename, double scale)
 
 
 
-void draw_map(Map *map, Window *screen)
+static void draw_map(Map *map, Window *screen)
 {  
 
     for(int i = map->visible_tile_height_min; i < map->visible_tile_height_max; i++)
@@ -208,47 +225,98 @@ void draw_map(Map *map, Window *screen)
 }
 
 
-bool collision_map(void (*callback(Tile *tile)), Map *map, Actor *character, int start_tile, int end_tile)
+
+bool collision_map(void (*callback(Tile *tile, Actor *character)), Map *map, Actor *character)
 {
     
-    int row = (character->coord.y / map->tiles[0][0].height);
-    int col = (character->coord.x / map->tiles[0][0].width); 
+    int row_e = (character->coord.y + character->dimen.h) / map->tiles[0][0].height;
+    int col_e = (character->coord.x + character->dimen.w) / map->tiles[0][0].width;
+    int row_s = (character->coord.y / map->tiles[0][0].height) ;
+    int col_s = (character->coord.x / map->tiles[0][0].width); 
+
+    const int MARGIN = 1;
+
+    int row_start   = row_s;
+    int row_end     = row_e + 2;
+    int col_start   = col_s; 
+    int col_end     = col_e + 2; 
+    if(row_end > map->rows)
+        row_end = map->rows;
     
-    int row_start   = row - MARGIN;
-    int row_end     = row + MARGIN;
-    int col_start   = col - MARGIN; 
-    int col_end     = col + MARGIN; 
+    if(col_end > map->cols)
+        col_end = map->cols;
 
-
-    if(row_start <= 0) row_start = 0;
-    else if(row_end >= map->rows) row_end = map->rows;
-            
-    if(col_start <= 0) col_start = 0;
-    else if(col_end >= map->cols) col_end = map->cols;
+    if(row_start < 0) row_start = 0; 
+    else if(row_end > map->rows) row_end = map->rows;
     
+    printf("%d x %d\n", row_end-row_start, col_end - col_start);
 
+    if(col_start < 0) col_start = 0;
+    else if(col_end > map->cols) col_end = map->cols;
+
+    if(map->tiles[0][0].width > character->dimen.w){
+        col_end     = 1;
+        col_start   = 0;
+    }
+    if(map->tiles[0][0].height > character->dimen.h){
+        row_end     = 1;
+        row_start   = 0;
+    }
+
+    bool stage = false;
+    
     for(int i = row_start; i < row_end; i++)
-        for(int j = col_start; j < col_end; j++)           
-            for(int tile = start_tile; tile < end_tile; tile++)
+        for(int j = col_start; j < col_end; j++)
+        {
+            
+            grid_collision_debug(*map, *character, i, j);
+
+            if(map->source[i][j] >= 0 && map->source[i][j] < map->number_of_tiles_with_collision)
             {
-                if(map->source[i][j] == tile)
-                {
-                    if( character->coord.x + character->dimen.w >= map->tiles[i][j].x &&
-                        character->coord.x <= map->tiles[i][j].x + map->tiles[i][j].width &&
-                        character->coord.y <= map->tiles[i][j].y + map->tiles[i][j].height &&
-                        character->coord.y + character->dimen.h >= map->tiles[i][j].y
-                    ){
+                if( 
+                    character->coord.x + character->dimen.w >= map->tiles[i][j].x &&
+                    character->coord.x <= map->tiles[i][j].x + map->tiles[i][j].width &&
+                    character->coord.y <= map->tiles[i][j].y + map->tiles[i][j].height &&
+                    character->coord.y + character->dimen.h >= map->tiles[i][j].y 
+                ){
 
-                        if(callback != NULL)
-                            callback(&map->tiles[i][j]);
+                    if(callback != NULL)
+                        callback(&map->tiles[i][j], character);
+                    
+                                    
+                    #ifdef __DEBUGGER_COLLISION_MAP__
+                                        
+                        int border = 4;
 
-                        return true;
-                    }
+                        al_draw_rectangle(
+                            character->coord.x, 
+                            character->coord.y, 
+                            character->dimen.w + character->coord.x, 
+                            character->dimen.h + character->coord.y, 
+                            al_map_rgb(0, 255, 0), 
+                            border
+                        );
+
+
+                        al_draw_rectangle(
+                            map->tiles[i][j].x,
+                            map->tiles[i][j].y, 
+                            map->tiles[i][j].width + map->tiles[i][j].x, 
+                            map->tiles[i][j].height + map->tiles[i][j].y, 
+                            al_map_rgb(255, 255, 0), 
+                            border
+                        );
+                    #endif //__DEBUGGER_COLLISION_MAP__ 
+
+                    stage = true;
                 }
             }
+        }
 
-    return false;
+    return stage;
 }
+
+
 
 static void set_visible_tiles(Window *screen, Map *map)
 {
@@ -289,7 +357,8 @@ static void set_visible_tiles(Window *screen, Map *map)
 
 
 
-static void set_scroll_camera(Window *screen, Map *map, Actor *character){
+static void set_scroll_camera(Window *screen, Map *map, Actor *character)
+{
  
 
     // CONFIGURAR E CENTRALIZAR A CAMERA
@@ -299,13 +368,13 @@ static void set_scroll_camera(Window *screen, Map *map, Actor *character){
    
 
     // LIMITAR O MOVIMENTO DA CAMERA NA ALTURA
-    if(character->coord.y - character->dimen.h  +  screen->height / 2 >= map->height)
+    if(character->coord.y + character->dimen.h + screen->height / 2 >= map->height + map->tiles[0][0].height)
     {
         map->scroll.y = map->height - screen->height + map->tiles[0][0].height;
     }
 
     // LIMITAR O MOVIMENTO DA CAMERA NA LARGURA
-    if(character->coord.x - character->dimen.w+ screen->width  / 2 >= map->width)
+    if(character->coord.x + character->dimen.w + screen->width  / 2 >= map->width + map->tiles[0][0].width)
     {
         map->scroll.x = map->width - screen->width + map->tiles[0][0].width;
     }
@@ -313,10 +382,25 @@ static void set_scroll_camera(Window *screen, Map *map, Actor *character){
 
     if(map->scroll.x < 0) map->scroll.x = 0;
     if(map->scroll.y < 0) map->scroll.y = 0;
+
+
+    if(map->height < screen->height)
+        map->scroll.y = 0;
+
+
 }
 
-void move_camera(Window *screen, Map *map, Actor *character)
+
+
+void dynamic_camera(Window *screen, Map *map, Actor *character)
 {
+
+    if(!screen || !map || !character)
+    {
+        fprintf(stderr, "\nError: Paramentros não podem ser nulos \"dynamic_camera\"\n");
+        exit(-1);
+    }
+
     static Camera camera;
 
     set_scroll_camera(screen, map, character);
@@ -326,4 +410,13 @@ void move_camera(Window *screen, Map *map, Actor *character)
     al_translate_transform(&camera, -map->scroll.x, -map->scroll.y);
     al_use_transform(&camera); 
 
+    draw_map(map, screen);
 }
+
+
+
+void static_camera(Window *screen, Map *map)
+{
+    draw_map(map, screen);
+}
+

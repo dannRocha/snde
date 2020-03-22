@@ -39,19 +39,57 @@ void free_image_src(char **path, int row)
         free(path[i]);
 }
 
+void free_actor(Actor *character)
+{   
+    if(character->event_queue)
+        al_destroy_event_queue(character->event_queue);
+    
+    if(character->spritesheet)
+        al_destroy_bitmap(character->spritesheet);
+    
+    if(character->mapping){
+        for(int i = 0; i < character->animation.number_of_animations; i++)
+        {
+            free(character->mapping[i]);
+        }
+
+        free(character->mapping);
+    }
+
+    if(character->animation.control.sequence_of_sprites)
+    {
+        free(character->animation.control.sequence_of_sprites);
+    }
+}
+
 
 
 void destroy(void* element, const char* type)
 {
     if(!strcmp(type, "Window"))
-        al_destroy_display((Display) element);
+    {
+        Window *window = (Window* ) element;
+        al_destroy_display(window->display);
+        window->display = NULL;
+        
+    }
     else if(!strcmp(type, "Events"))
-        al_destroy_event_queue((Events) element);
+    {
+        Events event = (Events) element;
+        al_destroy_event_queue(event);
+        event = NULL;
+    }
     else if(!strcmp(type, "Image"))
-        al_destroy_bitmap((Image) element);
+    {
+        Image image = (Image) element;
+        al_destroy_bitmap(image);
+        image = NULL;
+    }
     else if(!strcmp(type, "Map"))
         free_map((Map*) element);
-    else{
+    else if(!strcmp(type, "Actor"))
+        free_actor((Actor*) element);
+    else {
         fprintf(stderr, "Error ao liberar memoria pra tipo: %s\n", type);
         exit(-1);
     }

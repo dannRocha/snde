@@ -4,6 +4,7 @@
 #include "strings/strings.h"
 #include "erros/erro_message.h"
 #include "free/free.h"
+#include "system/folder/folder.h"
 
 #endif //__TOOLS_H__ 
 

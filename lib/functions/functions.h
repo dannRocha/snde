@@ -16,13 +16,15 @@ bool init_all_lib(void);
 #ifndef __WINDOW_SNDE_H__
 #define __WINDOW_SNDE_H__
 
-Window create_window(int width, int height, const char* title);
+
+Window create_window(u_int16_t width, u_int16_t height, const char* title);
+
 
 #endif //__WINDOW_SNDE_H__
 
 
-#ifndef __IMAGE_SNDE_H__
-#define __IMAGE_SNDE_H__
+#ifndef __DRAW_SNDE_H__
+#define __DRAW_SNDE_H__
 
 Image load_image(const char* src);
 void draw_image(Image img, float x,float y, double scale, int flags );

@@ -7,15 +7,18 @@ typedef ALLEGRO_DISPLAY     *Display;
 typedef ALLEGRO_BITMAP      *Image;
 typedef ALLEGRO_EVENT_QUEUE *Events;
 typedef ALLEGRO_EVENT        Event;
-typedef ALLEGRO_TIMEOUT      Time;
+typedef ALLEGRO_TIMEOUT      TimerOut;
+typedef ALLEGRO_TIMER        Timer;
 typedef ALLEGRO_TRANSFORM    Camera;
+typedef ALLEGRO_COLOR        Color;
 
 
 
 typedef struct Coord
 {
-    int x;
-    int y;
+    
+    double x;
+    double y;
 
 } Coord;
 
@@ -30,9 +33,12 @@ typedef struct Dimension
 
 
 
-typedef struct
+typedef struct Sprites
 {
-    Image sprite[10];
+    double x;
+    double y;
+    double w;
+    double h;
 
 } Sprites;
 
@@ -45,24 +51,62 @@ typedef struct Attributes
 } Attributes;
 
 
+typedef struct AnimationControl
+{
+    int *sequence_of_sprites;
+    int len;
+    int next;
+    bool enable;
+    
+} AnimationControl;
+
+typedef struct  StatusAnimation
+{
+    u_int8_t current_sprite;
+    u_int8_t current_animation;
+    bool configured;
+    bool running;
+
+} StatusAnimation;
+
+
+
+typedef struct Animation
+{
+    StatusAnimation status;
+    int number_of_animations;
+    int number_of_sprites_per_animation;
+    Timer *time;
+    double framesperseconds;
+    AnimationControl control;
+
+} Animation;
+
+
 
 typedef struct  Character
 {
     Coord coord;
     Dimension dimen;
-    Attributes attr;
-    Sprites img;
-    Image test;
+    void *attr;
+    // Attributes attr;
+    Sprites **mapping;
+    Image spritesheet;
+    Animation animation;
+    Events event_queue;
+    int8_t speed;
+    double scale;
+
 
 } Actor;
 
 
 
 typedef struct Tile{
-    int x;
-    int y;
-    int width;
-    int height;
+    u_int64_t x;
+    u_int64_t y;
+    u_int32_t width;
+    u_int32_t height;
     char *label;
     char *id;
 
@@ -75,8 +119,8 @@ typedef struct Map
     int rows;
     int cols;
 
-    long int width;
-    long int height;
+    int width;
+    int height;
     
     int visible_tile_width_max;
     int visible_tile_height_max;
@@ -85,7 +129,8 @@ typedef struct Map
     int visible_tile_height_min;
 
     int number_for_tiles;
-    
+    int number_of_tiles_with_collision;
+
     Coord scroll;
 
     bool set_scroll;
@@ -95,7 +140,7 @@ typedef struct Map
     double scale;
     
     Tile **tiles;
-    Image *bitmap; 
+    Image *bitmap;
 
 } Map;
 
@@ -109,6 +154,7 @@ typedef struct Window
     Display display;
 
 } Window;
+
 
 
 
