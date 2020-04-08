@@ -645,10 +645,21 @@ Para realizar a animação dos sprites de um ***```Actor```*** , a biblioteca po
 ```cpp
 void run_animation(Actor *character, double framesperseconds, int select_animation, AnimationControl control);
 ```
+##### Spritsheet
+<figure>
+    <img src="docs/img/character.png" style="display: block; margin: 0 auto;">
+    <figcaption>
+    Linha x Coluna
+        <br/>
+        * Cada linha representa a animação
+        <br/>
+        * Cada coluna são os frames a ser exibidos
+    </figcaption>
+</figure>
+
 ***Exemplo 6.0***:
 ```cpp
 #include "lib/snde.h"
-
 
 int main(int argc, char** argv){
 
@@ -691,8 +702,47 @@ int main(int argc, char** argv){
 }
 
 ```
-#### Controle de Animação
+#### Configuração e Controle da Animação
+```cpp
+void run_animation(Actor *character, double framesperseconds, int select_animation, AnimationControl control);
+```
+***void run_animation***
+* Actor character
+    * Ator que receberar a animação.
+* double frameperseconds
+    * Velocidade de exibição dos sprites.
+* int select_animation
+    * Linha de animação a ser executado.
+* AnimationControl animation
+    * Controle da animação
+    * Controle padrão é **auto_play**.
+    * Controle personalizado **animation_control:**
+    ***Assinatura:***
+        ```cpp
+        AnimationControl animation_control(int number_sprites, ...);
+        ```
+        A função ***animation_control*** recebe como primeiro paramentro o numero de sprites a ser controlados e em seguida a ordem de cada sprite a ser executado.
 
+        ***Exemplo 6.1***:
+        ```cpp
+        animation_control(
+            3, // Número de sprites a ser controlado 
+            2, // executar o sprite 2
+            0, // executar o sprite 0
+            1  // executar o sprite 1
+        );
+        ```
+
+***Exemplo 6.2***:
+<figure>
+    <img src="docs/img/animation.gif" style="display: block; margin: 0 auto;">
+    <figcaption>
+    O exemplo acima mostra o sistema de colisão do mapa sendo utilizado em conjunto com o movimento da câmera e o debugger visual da colisão com objetos da cena. Controle da animação sendo usado. <strong>OBS: Mapa desenhado em escala 2 e personagem em escala 6.5</strong>;
+    </figcaption>
+</figure>
+
+***OBS:***
+    Os sprites da spritesheet está ordenado para facilitar a execução da animação.
 
 ### Movimentação
     documentation in progress

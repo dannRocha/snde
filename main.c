@@ -1,6 +1,6 @@
 // #define __DEBUGGER_BOX_COLLISION__
 #define __DEBUGGER_COLLISION_MAP__
-#define __DEBUGGER_GRID_COLLISION_CHECK__
+// #define __DEBUGGER_GRID_COLLISION_CHECK__
 #include "lib/snde.h"
 #include <pthread.h>
 
@@ -36,12 +36,12 @@ int main(int argc, char** argv)
 
     Window screen   = create_window(1240, 480, "LIBRARY");
     Events events   = add_event_listener(&screen);
-    Map scenarios   = load_map("map/map_example3.txt", 0.5);
+    Map scenarios   = load_map("map/map_example3.txt", 2);
    
     Actor person = create_character("src/bmp/animation/character2.png", 32, 32, 0,0, 6.5);
         person.coord.x = 0;
         person.coord.y = 0;
-        person.speed   = 30;
+        person.speed   = 15;
         al_convert_mask_to_alpha(person.spritesheet, al_map_rgb(255,0, 255));
 
     Attr attr;
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
         else
         {
             run_animation( &person, fps, animacao,
-                animation_control(0, 0));
+                animation_control(1, 0));
             // run_animation(&person, fps, animacao, auto_play);
         }
         
@@ -107,9 +107,6 @@ int main(int argc, char** argv)
        
         collision_map(NULL, &scenarios, &person);
     
-    
-
-        
         
         // draw_rect(person.coord.x, person.coord.y, person.dimen.w + person.coord.x, person.dimen.h + person.coord.y, rgba(255,255,255,1));
         update_screen(60.0);
