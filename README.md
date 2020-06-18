@@ -41,7 +41,7 @@
 Apenas criar código descartável. E usar um pouco da ***linguagem C*** / ***Markdown***.
 
 ## O que é?
-A biblioteca contém funções que abstrai funcionalidades da biblioteca ***Allegro*** facilitando o uso na criação de protótipos de jogos 2D.
+A biblioteca contém funções que abstrai funcionalidades da biblioteca ***Allegro***, facilitando o uso na criação de protótipos de jogos 2D.
 
 ***Observação***
 Os tipos de dados ***```Window```*** , ***```Image```*** , ***```Events```*** e outros presentes nesse documento, são apenas ***alias*** para a biblioteca ***Allegro*** ou são ***alias*** de componentes da propria biblioteca **snde**.
@@ -62,7 +62,7 @@ Os tipos de dados ***```Window```*** , ***```Image```*** , ***```Events```*** e 
 * Nome temporário ou definitivo;
 * Organização de pastas indefinida;
 
-Para começar a utilizar a lib é necessário chamar a função ***```init_all_lib```*** para inicializar todos os componentes internos de configurações. A função de inicialização retorna ***```true```*** caso todas as configurações foram feitas com sucesso e ***```false```*** se houve alguma falha.
+Para começar a utilizar a lib é necessário chamar a função ***```init_all_lib```*** , que realizará algumas configurações. A função retorna ***```true```*** caso todas as configurações foram feitas com sucesso e ***```false```*** se houve alguma falha.
 
 ***Assinatura:***
 ```cpp
@@ -88,19 +88,16 @@ int main(int argc, char** argv){
 }
     
 ```
-Outra função importante é a de limpeza da memória após finalizar o programa,```destroy```, que recebe como parâmetro do elemento a ser limpo e o tipo de dado em **string**.
+Outra função importante é a de limpeza da memória após finalizar o programa,```destroy```, que recebe como parâmetro o elemento a ser limpo e o tipo de dado em **string**.
 ***Assinatura:***
 ```cpp
 void destroy(void* element, const char* type);
 ```
-***Comando Compilação***
-```
- gcc -Wall arquivo_main.c -o nome_do_projeto -lallegro -lallegro_image -lallegro_primitives
-```
+
 ## 01 - Janela
 ### Criar janela
 
-Para criar uma janela basta declarar um varialvel do tipo ***```Window```*** , que receba a função ***```create_window```*** que recebe como parâmetro a largura, altura e o titulo da janela.
+Para criar uma janela, basta declarar uma varialvel do tipo ***```Window```*** , que receba a função ***```create_window```*** .
 
 ***Assinatura:***
 ```c
@@ -141,9 +138,9 @@ int main(int argc, char** argv){
 ## 02 - Imagem
 ### Carregando imagens
 
-Para carregar uma imagem para o seu projeto, crie uma variavel do tipo ***```Image```*** , que recebe a função ***```load_image```*** passando como parâmetro ***```const char* source```*** com o caminho da imagem a partir da raiz do projeto e com a extensão da imagem. 
+Para carregar uma imagem, crie uma variavel do tipo ***```Image```*** , que receberá a função ***```load_image```*** , passando como parâmetro ***```const char* source```*** com o caminho da imagem a partir da raiz do projeto e com a extensão da imagem. 
 
-**OBS**: Apenas os formatos de imagens são permitidos ***```.bmp```*** ou ***```.png```*** .
+**OBS**: Apenas os formatos  de imagens ***```.bmp```*** e ***```.png```*** são aceitos.
 
 ***Assinatura:***
 ```cpp
@@ -152,18 +149,15 @@ Image load_image(const char* src);
 ```
 
 ***Exemplo 2.0***:
-```
+```sh
 Árvore de diretórios.
 
-/src|
-|   |--imagens_b|
-|   |--|---hero.bmp
-|   |
-|   |--imagens_p|
-|   |--|---hero.png
-|
+src
+├── bmp
+│   └── hero.bmp
+└── png
+    └── hero.png
 ```
-
 
 ```cpp
 #include "lib/snde.h"
@@ -174,8 +168,8 @@ int main(int argc, char** argv){
     if(!init_all_lib())
         return -1;
 
-    Image hero_b = load_image("src/imagens_b/hero.bmp");
-    Image hero_p = load_image("src/imagens_p/hero.png");
+    Image hero_b = load_image("src/bmp/hero.bmp");
+    Image hero_p = load_image("src/png/hero.png");
     
     /*
 
@@ -194,7 +188,7 @@ int main(int argc, char** argv){
 ##
 ## 03 - Desenhando imagens
 ### draw_image
-Para desenhar uma imagem da tela o janela deve está instanciada e a imagem a ser desenha esteja pronta pra uso. Com os requisitos concluídos basta chamar a função ***```draw_image```*** , passando a imagem a ser desenhada com suas coordenas ***```x```*** , ***```y```*** e as configurações de exibição da imagem: 
+Para desenhar uma imagem na tela, a janela deve está instanciada e a imagem a ser desenha pronta pra uso. Com os requisitos concluídos basta chamar a função ***```draw_image```*** , passando a imagem a ser desenhada com as coordenas ***```x```*** , ***```y```*** e as configurações de exibição da imagem: 
 ***escala*** a ser desenha e a ***flag*** de rotação da imagens;
 
 ***Assinatura:***
@@ -253,7 +247,7 @@ int main(int argc, char** argv){
 ##
 ## 04 - Cenário
 ### Criando mapa
-Para a criação de um arquivo de mapa deve ser criado com o esquema abaixo.
+Para criação de um arquivo de mapa, o arquivo deve ser criado com o esquema abaixo.
 
 ***Exemplo 4.0***:
 ```cpp
@@ -292,20 +286,18 @@ Para a criação de um arquivo de mapa deve ser criado com o esquema abaixo.
 </figure>
 
 
-```cpp
+```sh
 Árvore de diretórios.
 
-/src|
-|   *--bmp/
-|   *--*---map/
-|      *----*---ground.bmp
-|           *---wall.bmp
-|           *---water.bmp
-|   
-|   *--map/
-|   *--*--scenario_00.map
-|
-|main.c
+├── src
+│   ├── bmp
+│   │   └── map
+│   │       ├── ground.bmp
+│   │       ├── wall.bmp
+│   │       └── water.bmp
+│   └── map
+│       └── scenario_00.map
+└── main.c
 ```
 ```cpp
 (stateless)
@@ -334,7 +326,7 @@ Para a criação de um arquivo de mapa deve ser criado com o esquema abaixo.
 }
 ```
 ***OBS:***
-* Cabeçalho
+##### Mapa em partes
 ```cpp
 (stateless)
 {
@@ -399,7 +391,7 @@ Para a criação de um arquivo de mapa deve ser criado com o esquema abaixo.
 ##
 
 ### Carregar mapa
-Para carregar o mapa é necessário chamar a função ***```load_map```*** que rece como parâmetro o caminho do arquivo de mapa|cenario e ***```free_map```*** para limpar a memória que está com os dados do mapa. 
+Para carregar um aquivo com o mapa, é necessário usar a função ***```load_map```*** passando o caminho do arquivo de mapa|cenario e ***```free_map```*** para limpar a memória alocada com os dados do mapa. 
 
 ***Assinatura:***
 ```cpp
@@ -434,7 +426,7 @@ int main(int argc, char** argv){
 ##
 
 ### Desenhar mapa
-Para desenhar o mapa, é necessário passar as variaves do tipo ***```Window```*** e ***```Map```*** que contem os dados do cenário.
+Com o arquivo de mapa já carregado, utilize as funções de câmera.
 
 ***Assinatura:***
 ```cpp
@@ -472,12 +464,12 @@ int main(int argc, char** argv){
 ```
 
 ### Colisão
-Para adicionar colisão com o mapa, a biblioteca dispoe da função ***```collision_map```*** que retorna ***```false```*** se não houve colisão e ***```true```*** se houve colisão com os objetos que possuem colisão no cenário.
+Para adicionar colisão com o mapa, a biblioteca dispoe da função ***```collision_map```*** que retorna ***```false```*** se não houver colisão e ***```true```*** se houver colisão com os objetos que possuem colisão no cenário.
 
 A função ***```collision_map```*** recebe como parâmetros:
-* ```void (*callback(Tile *tile, Actor *character))```: Uma função de tratamento da colisão, caso não deseje implementar passe ```NULL``` como parâmetro.   
+* ```void (*callback(Tile *tile, Actor *character))```: Uma função de tratamento da  pós colisão, caso não deseje implementar passe ```NULL``` como parâmetro.   
 * ```Map *map``` : Um ponteiro ou a referência para o mapa que deseja verificar a colisão.
-* ```Actor *character``` : Um ponteiro ou a referência para o um objeto jogavel ou não. Ex: Nave, Inimigo, Heroi etc.
+* ```Actor *character``` : Um ponteiro ou referência para o um objeto jogavel ou não. Ex: Nave, Inimigo, Heroi etc.
 
 
 ***Assinatura:***
@@ -495,7 +487,7 @@ bool collision_map(void (*callback(Tile *tile, Actor *character)), Map *map, Act
 </figure>
 
 ### Câmera
-Realizar o movimento ou rolagem da câmera/cenário com base em um ```Actor``` a biblioteca possui a função ```dynamic_camera``` que recebe com parâmetro a janela alvo```Window```, o mapa ```Map``` que vai possuir a rolagem e como objeto de orientação o Personagem ```Actor```.
+Realizar o movimento ou rolagem da câmera/cenário com base em um ```Actor``` a biblioteca possui a função ```dynamic_camera``` que recebe com parâmetro a janela alvo```Window```, o mapa ```Map``` que vai possuir a rolagem e como objeto de orientação um ```Actor```.
 ***Assinatura:***
 ```cpp
 void dynamic_camera(Window *screen, Map *map, Actor *character);
@@ -552,8 +544,8 @@ int main(int argc, char** argv){
 
 Nos exemplos anterios não foi implementado nenhum evento, até o mais simples deles o de fechar a janela do programa.
 
-Existe dois tipos de dados para iniciar o trabalho de eventos no seu software, ***```Events```*** e ***```Event```*** , e duas funções para iniciar os eventos e obter o evento que foi ativado ***```add_event_listener```*** e ***```get_event```*** .
 * ***```Events```*** é utilizado pra instância uma variavel que receberar a fila de eventos.
+Existe dois tipos de dados para iniciar o trabalho de eventos no seu software, ***```Events```*** e ***```Event```*** , e duas funções para iniciar os eventos e obter o evento que foi ativado ***```add_event_listener```*** e ***```get_event```*** .
 * ***```Event```*** é utilizada pra obter uma estrutura ***```struct```*** com os ***estados*** dos eventos.
 * ***```add_event_listener```*** função inicializa todos os eventos e recebe como parâmetro a janela que deseja observar e retorna um ponteiro com do tipo ***```Events```*** .
     ***Assinatura:***
