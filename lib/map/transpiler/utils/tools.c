@@ -328,7 +328,7 @@ char *transpiler(const char*filename, MapTranspiler map, Map *referece_map)
 
     
     fclose(file_transpiler);
-    if(file_transpiler) free(file_transpiler);
+
     if(id) free(id);
 
     return (char*) filename_t;

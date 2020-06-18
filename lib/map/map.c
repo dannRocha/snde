@@ -52,8 +52,8 @@ static char **path_bitmap(const char *filename)
 
     fclose(file);
 
-    if(!file)
-        free(file);
+    // if(!file)
+        // free(file);
 
 
     return path;
@@ -122,8 +122,8 @@ static void configure_tiles(Map *map, const char *filename, double scale)
     map->height = (map->rows - 1) * map->tiles[0][0].height;
 
 
-    if(!paths)
-        free(paths);
+    // if(!paths)
+    //     free(paths);
     
 }
 
@@ -151,7 +151,8 @@ Map load_map(const char *filename, double scale)
     FILE *file = fopen(filename_transpiler, "r");
 
     if(file == NULL)
-    {   fprintf(stderr, "Error ao ler arquivo: %s\n", filename_transpiler);
+    {   
+        fprintf(stderr, "Error ao ler arquivo: %s\n", filename_transpiler);
         free(file);
         exit(-1);
     }

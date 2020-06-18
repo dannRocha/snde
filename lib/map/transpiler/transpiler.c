@@ -55,7 +55,6 @@ const char *transpiler_map(Map *reference_map, const char *filename)
 
     fclose(file);
 
-    if(file) free(file);
     if(line) free(line);
 
     reference_map->tiles      = (Tile** ) calloc(map.rows, sizeof(Tile* ));
@@ -80,7 +79,7 @@ const char *transpiler_map(Map *reference_map, const char *filename)
     const char *filename_transpiler = transpiler(filename, map, reference_map);
     
     
-    //***MATRIZ
+    // ***MATRIZ
     for(int i = 0; i < map.rows; i++)
     {
         free(map.matriz[i]);
@@ -88,7 +87,7 @@ const char *transpiler_map(Map *reference_map, const char *filename)
 
     free(map.matriz);
 
-    //***MATRIZ
+    // ***MATRIZ
     for(int i = 0; i  < 3; i++)
     {
         for(int j = 0; j < map.grid.size[i]; j++)
@@ -105,6 +104,5 @@ const char *transpiler_map(Map *reference_map, const char *filename)
     if(map.grid.size)
         free(map.grid.size);
 
-    return filename_transpiler;
-    
+    return filename_transpiler;    
 } 
