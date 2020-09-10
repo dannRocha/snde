@@ -62,7 +62,7 @@ Os tipos de dados ***```Window```*** , ***```Image```*** , ***```Events```*** e 
 * Nome temporário ou definitivo;
 * Organização de pastas indefinida;
 
-Para começar a utilizar a lib é necessário chamar a função ***```init_all_lib```*** , que realizará algumas configurações. A função retorna ***```true```*** caso todas as configurações foram feitas com sucesso e ***```false```*** se houve alguma falha.
+Para começar a utilizar a lib é necessário chamar a função ***```init_all_lib```*** , que realizará algumas configurações. A função retorna ***```true```*** caso todas as configurações realizadas com sucesso e ***```false```*** se houver alguma falha.
 
 ***Assinatura:***
 ```cpp
