@@ -235,8 +235,6 @@ bool collision_map(void (*callback(Tile *tile, Actor *character)), Map *map, Act
     int row_s = (character->coord.y / map->tiles[0][0].height) ;
     int col_s = (character->coord.x / map->tiles[0][0].width); 
 
-    const int MARGIN = 1;
-
     int row_start   = row_s;
     int row_end     = row_e + 2;
     int col_start   = col_s; 
@@ -250,7 +248,7 @@ bool collision_map(void (*callback(Tile *tile, Actor *character)), Map *map, Act
     if(row_start < 0) row_start = 0; 
     else if(row_end > map->rows) row_end = map->rows;
     
-    printf("%d x %d\n", row_end-row_start, col_end - col_start);
+    // printf("%d x %d\n", row_end-row_start, col_end - col_start);
 
     if(col_start < 0) col_start = 0;
     else if(col_end > map->cols) col_end = map->cols;
