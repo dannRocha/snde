@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -149,13 +152,80 @@ void draw_image(Image img, float x,float y, double scale, int flags ){
 }
 
 
+#define MAX_FPS 1000
+#define MIN_FPS 1
 
-void update_screen(double frameperseconds){
+double calculate_current_fps(double, double);
+double to_miliseconds(double);
+
+
+void update(unsigned short frames_per_second, bool running, void(*callback)(double dt)){ 
+
+  if(frames_per_second < MIN_FPS || frames_per_second > MAX_FPS){
+  	const char* message = ( frames_per_second < MIN_FPS )
+  													?  "frames per second can't be equal or smaller than 0"
+  													:  "frames per second can't be greater than MAX_FPS(1000)";
+    fprintf(stderr, "\033[1;31merror:\033[0;0m %s\n*function: %s\n*line: %d\n\t - %s\n", __FILE__, __FUNCTION__, __LINE__, message);          
+  	exit(1);
+  }
+
+  const long mileseconds = 1000;
+   
+  double time_before = clock();
+  double time_now = clock();
+  double delta_time = (time_now - time_before) / CLOCKS_PER_SEC;
+				
+  double elapsed;
+  double then = clock();
+  unsigned long long calls = 0;
+
+
+  while(true) {
+    time_now = clock();
+    elapsed = time_now - then;
+		calls++;
+								
+    if(elapsed > CLOCKS_PER_SEC / frames_per_second){      
+      then = time_now - ((long)elapsed % (long)(mileseconds / frames_per_second));
       
-    al_rest(1.0 / frameperseconds);
-    al_flip_display();
+      #ifdef __DEBUGGER_LOG_BAR__
+
+      	double fps = calculate_current_fps(delta_time, frames_per_second);
+      	double dt  = to_miliseconds(delta_time);
+        clear_log();
+        
+      	#ifdef RAW
+      		dt = delta_time * mileseconds;
+          printf("| \033[42mfps:\033[0;0m %lf | \033[42mdelta time:\033[0;0m %lfs | \033[42mclock system:\033[0;0m %ld | \033[42mcalls:\033[0;0m: %lld |\n",  fps, dt, clock(), calls);		
+      	#else
+      	  printf("| \033[42mfps:\033[0;0m %.2lf | \033[42mdelta time:\033[0;0m %.2lfms | \033[42mclock system:\033[0;0m %ld | \033[42mcalls:\033[0;0m: %lld |\n",  fps, dt, clock(), calls);
+      	#endif
+      #endif			
+			
+      if(running) {
+      	if(callback != NULL){
+      	  callback(delta_time);
+      		al_flip_display();
+      	}
+        
+   	    
+        delta_time = (time_now - time_before) / CLOCKS_PER_SEC;
+        time_before = time_now;
+        time_now = clock();
+      }
+    } 
+  }
 }
 
+
+double calculate_current_fps(double delta_time, double fps){
+	return delta_time * pow(fps, 2);
+}
+
+
+double to_miliseconds(double seconds){
+	return seconds * 1000;
+}
 
 
 Events add_event_listener(Window *screen){

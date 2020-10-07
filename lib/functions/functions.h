@@ -58,6 +58,13 @@ void keyboard(Event* event, int* sense_x, int* sense_y);
 
 #endif //__UTILS_SNDE_H__
 
+#ifndef __SNDE_DELTATIME_H__
+#define __SNDE_DELTATIME_H__
+
+void update(unsigned short frames_per_second, bool running, void(*callback)(double dt));
+
+#endif // __SNDE_DELTATIME_H__
+
 
 #endif //__ALLEGRO_ABST__H__
 
